@@ -155,9 +155,6 @@
   .legend span{font-size:13px;color:var(--ink-soft)}
 
   /* Watching-for line and Note button */
-  .focus-line{margin:6px 18px 0;font-size:13px;color:var(--ink-soft);display:none}
-  .focus-line.on{display:block}
-  .focus-line b{color:var(--ink);font-weight:600}
   .live-foot .btn.mark{flex:0 0 30%;border-color:var(--ink);background:#fff;font-size:15px;line-height:1.2;
     user-select:none;-webkit-user-select:none}
   .live-foot .btn.mark.hot{background:var(--ink);color:#fff}
@@ -396,11 +393,12 @@
 <!-- KEY POINTS -->
 <section class="screen" id="s-points">
   <div class="topbar">
-    <button class="back" onclick="show('s-home')">&lsaquo; Back</button>
-    <span class="title">Key points</span>
+    <button class="back" onclick="show('s-focus');setStep(3)">&lsaquo; Back</button>
+    <span class="title">Before you teach</span>
     <span style="width:52px"></span>
   </div>
   <div class="pick-body">
+    <p class="pick-step">Read this before you go in</p>
     <h1 class="pick-q">What this lesson is really about</h1>
     <p class="big-idea">Three leaders signed the same words and each meant something different by them. That is not dishonesty. It is how agreements get made, and it is why the alliance broke.</p>
 
@@ -421,7 +419,7 @@
     <p class="pt-p">A board, and chalk or a marker. Learners need exercise books and pens. Nothing to print, nothing to project.</p>
   </div>
   <div class="pick-foot">
-    <button class="btn primary" style="width:100%" onclick="openFocus()">Start the lesson</button>
+    <button class="btn primary" style="width:100%" onclick="openStartSheet()">Start the lesson</button>
   </div>
 </section>
 
@@ -460,7 +458,6 @@
     <h2 id="step-title"></h2>
     <div class="step-time" id="step-time"><b id="step-timer">3:00</b><small id="step-plan">of 3 min</small></div>
   </div>
-  <div class="focus-line" id="focus-line"></div>
   <div class="live-body" id="live-body"></div>
   <div class="live-foot">
     <button class="btn mark" id="mark-btn" onclick="addMark()">Remember this</button>
@@ -487,7 +484,7 @@
     <h1 class="pick-q">Two stars and a wish</h1>
     <p class="recall">Two stars are two things that worked. The wish is the one thing you would change next time. Twenty seconds, while you still remember it.</p>
     <p class="why-label"><span class="star">&#9733;</span> Something that worked</p>
-    <input type="text" id="star-1" placeholder="e.g. The Monday story settled them">
+    <input type="text" id="star-1" placeholder="e.g. The group project story settled them">
     <p class="why-label"><span class="star">&#9733;</span> Something else that worked</p>
     <input type="text" id="star-2" placeholder="e.g. They copied the board without being asked">
     <p class="why-label"><span class="wishmark">&#10022;</span> One thing you would change</p>
@@ -541,34 +538,35 @@ const LESSON = {
     mins:3,
     blocks:[
       {t:"you", x:"Books closed. Do not say what the story is for. Tell it, then wait."},
-      {t:"say", full:["Books closed for one minute. I want to tell you about something that happened in an office on a Monday morning.",
-        "On Friday, three people ended a meeting. They agreed who would do what. On Monday, one of them says the writing up was clearly her job. Another says the words were only that someone would write it up. Nobody said who.",
-        "The same note. Two readings. And neither person is lying."],
-        short:"Tell the Monday story: three people agreed on Friday, on Monday they disagree about what was agreed, and nobody is lying."},
-      {t:"board", x:["The same note.","Two readings."]},
+      {t:"say", full:["Books closed for one minute. I want to tell you about a group project.",
+        "On Friday, three learners agreed how to split the work. One would do the research. One would make the poster. And they agreed that someone would write the paragraph at the end.",
+        "On Monday the paragraph is not written. One of them says it was obviously the poster person's job. Another says they only agreed that someone would do it. Nobody said who.",
+        "The same words. Two readings. And neither of them is lying."],
+        short:"Tell the group project story: three learners agree on Friday, on Monday the paragraph is missing, and nobody is lying."},
+      {t:"board", x:["The same words.","Two readings."]},
       {t:"you", x:"Write it. Then stop talking for a few seconds."}
     ],
     pivots:{
       noisy:"Stop talking. Write the four words on the board in silence, and wait. When the class is quiet, point at the board and say: this happens to you too. Then start the story again.",
-      lost:"Leave out the office. Ask instead: have you ever agreed something with a friend, and later you each remembered it differently? Take one answer. Then say: keep that in your mind.",
-      time:"Tell the story in three sentences. Three people agreed on Friday. On Monday they disagree about what was agreed. Nobody is lying. Write the board words and move on."
+      lost:"Leave out the project. Ask instead: have you ever agreed something with a friend, and later you each remembered it differently? Take one answer. Then say: keep that in your mind.",
+      time:"Tell the story in three sentences. Three learners agreed on Friday. On Monday the work is not done. Nobody is lying. Write the board words and move on."
     }
   },
   {
     title:"Ask what would prove it",
     mins:4,
     blocks:[
-      {t:"say", full:["Turn to the person next to you. One minute. What would prove who was supposed to write it up?"],
-        short:"Ask: what would prove who was supposed to write it up?"},
+      {t:"say", full:["Turn to the person next to you. One minute. What would prove whose job that paragraph was?"],
+        short:"Ask: what would prove whose job the paragraph was?"},
       {t:"do", x:"Pairs, one minute. Then three learners give an answer."},
       {t:"you", x:"Do not say who is correct. Collect three answers."},
-      {t:"say", full:["Here is the honest answer. Nothing would prove it. The note was written so that everyone could leave the meeting. It was unclear at exactly the point that mattered. That was not an accident. Agreements are often made this way."],
-        short:"Land it: nothing proves it. The note was written to end the meeting, not to answer the question."},
+      {t:"say", full:["Here is the honest answer. Nothing would prove it. They agreed those words so that they could stop arguing and go home. The words were unclear at exactly the point that mattered. That was not an accident. Agreements are often made this way."],
+        short:"Land it: nothing proves it. They agreed those words to end the argument, not to answer the question."},
       {t:"board", x:["Unclear at the point that matters"]}
     ],
     pivots:{
       lost:"They are looking for a correct answer. Say: there is no correct answer here, and that is the point. Give the last line now and move on.",
-      early:"Ask the whole class: why would three sensible adults agree to an unclear note? Take two answers. Listen for the words easy or quick.",
+      early:"Ask the whole class: why would three people agree to words that unclear? Take two answers. Listen for the words easy or quick.",
       time:"Leave out the pair talk. Ask the class, take one answer, give the last line, move on."
     }
   },
@@ -581,14 +579,14 @@ const LESSON = {
       {t:"board", x:["Yalta, Feb 1945","Stalin: safe borders, friendly neighbours","Roosevelt: help against Japan, the UN","Churchill: a strong Britain, a free Poland"]},
       {t:"do", x:"Copy the board into exercise books while you talk."},
       {t:"say", full:["Stalin wants the Soviet Union to be safe. He wants friendly countries on his western border, so that nobody can invade Russia again. Roosevelt wants Soviet help against Japan, and he wants the new United Nations to work. Churchill wants Britain to stay strong, and he wants a free Poland, because Britain went to war in 1939 for Poland.",
-        "Three leaders. Three different needs. And they must still leave Yalta with one signed agreement. Remember Monday morning."],
-        short:"Explain each line on the board in one sentence. End with: they still need words that all three can sign. Remember Monday morning."},
+        "Three leaders. Three different needs. And they must still leave Yalta with one signed agreement. Remember the group project."],
+        short:"Explain each line on the board in one sentence. End with: they still need words that all three can sign. Remember the group project."},
       {t:"you", x:"Point at the board as you speak about each leader."}
     ],
     pivots:{
       lost:"Stop at the names. Ask: which of these three is most afraid of being invaded again, and why? Take one answer. Then point at Stalin's line and continue.",
       noisy:"Stop. Ask the class to copy the board in silence for two minutes. Walk around the room. Start talking again only when it is quiet.",
-      time:"Write only the names and one phrase for each. Say one sentence about what each leader wanted. Leave out the Monday link and move on."
+      time:"Write only the names and one phrase for each. Say one sentence about what each leader wanted. Leave out the group project link and move on."
     }
   },
   {
@@ -618,8 +616,8 @@ const LESSON = {
         short:"Read the promise: governments through free elections. Then ask pairs what free means to Stalin, and to Roosevelt."},
       {t:"board", x:["\u201Cfree elections\u201D"]},
       {t:"do", x:"Pairs, two minutes. Then a few learners share."},
-      {t:"say", full:["To Stalin, free meant free from governments that are against the Soviet Union. To Roosevelt, free meant that the people choose. Both men signed. Both went home satisfied. The same note. Two readings."],
-        short:"Land it: to Stalin free meant free of enemies, to Roosevelt free meant the people choose. The same note, two readings."},
+      {t:"say", full:["To Stalin, free meant free from governments that are against the Soviet Union. To Roosevelt, free meant that the people choose. Both men signed. Both went home satisfied. The same words. Two readings."],
+        short:"Land it: to Stalin free meant free of enemies, to Roosevelt free meant the people choose. The same words, two readings."},
       {t:"board", x:["Stalin: free from enemies of the USSR","Roosevelt: the people choose"]}
     ],
     pivots:{
@@ -725,7 +723,7 @@ function renderHome(){
       <div class="meta">${NEXT_LESSON.meta}</div>
       <div class="need">${esc(NEXT_LESSON.line)}</div>
       <div class="row">
-        <button class="btn" disabled>Key points</button>
+        <button class="btn" disabled>Read the lesson</button>
         <button class="btn primary" disabled>Start the lesson</button>
       </div>
       <p class="soonnote">Only the Yalta lesson is built in this prototype.</p>
@@ -737,10 +735,9 @@ function renderHome(){
       <div class="meta">Grade 12 History &middot; Origins of the Cold War &middot; Lesson 1 of 5 &middot; 40 minutes</div>
       <div class="need"><b>You need:</b> a board, and chalk or a marker. Learners need exercise books and pens. Nothing to print. Nothing to project.</div>
       <div class="row">
-        <button class="btn" onclick="show('s-points')">Key points</button>
+        <button class="btn" onclick="show('s-prep')">Read the lesson</button>
         <button class="btn primary" onclick="openFocus()">Start the lesson</button>
       </div>
-      <p class="soonnote"><button class="linkish" onclick="show('s-prep')">Or read the whole lesson first</button></p>
     </div>`;
 }
 function teachAgain(){ taught=false; renderHome(); openFocus(); }
@@ -812,7 +809,7 @@ function renderCheckin(){
       ${l?`<p class="recall">${esc(l.title)}${l.wish?`<br>Last time you wished: ${esc(l.wish)}`:''}</p>`:''}
       <div class="scale">${MOOD.map(m=>`<button class="opt${checkin.mood===m.k?' on':''}" onclick="pickMood(${m.k})">
         <span>${m.t}</span><i>${m.n}</i></button>`).join("")}</div>`;
-    foot.innerHTML=`<button class="btn quiet" style="width:100%" onclick="confirmFocus()">Skip and start the lesson</button>`;
+    foot.innerHTML=`<button class="btn quiet" style="width:100%" onclick="show('s-points')">Skip this</button>`;
     return;
   }
 
@@ -862,7 +859,7 @@ function renderCheckin(){
 `;
   foot.innerHTML=`<div class="row">
       <button class="btn quiet" onclick="setStep(2)">Back</button>
-      <button class="btn primary" onclick="openStartSheet()">Start the lesson</button></div>`;
+      <button class="btn primary" onclick="show('s-points')">Next</button></div>`;
 }
 
 function pickMood(k){ checkin.mood=k; setStep(1); }
@@ -944,9 +941,6 @@ async function startLive(){
 }
 function renderStep(){
   const s=LESSON.steps[idx];
-  const fl=document.getElementById('focus-line');
-  if(idx===0){ fl.innerHTML='<b>Remember this</b> saves a moment you want to discuss afterwards.'; fl.classList.add('on'); }
-  else { fl.classList.remove('on'); }
   stepStart=Date.now();
   if(!lessonStart) lessonStart=Date.now();
   document.getElementById('step-title').textContent=s.title;
