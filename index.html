@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kula Teach — prototype</title>
+<style>
+  :root{
+    --paper:#F8F7F4;
+    --ink:#14243D;
+    --ink-soft:#5B6779;
+    --line:#D7DCE3;
+    --board:#12243A;
+    --chalk:#EDE7D6;
+    --chalk-dim:#A9B2BF;
+    --act:#1B3A63;
+    --act-deep:#12294A;
+    --lime:#E8B21E;
+    --learn:#E9F0F7;
+    --learn-ink:#1B3A63;
+    --warn:#B06E00;
+    --late:#C0392B;
+    --tint:#E8ECF2;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  html,body{margin:0;height:100%;overscroll-behavior:none;background:var(--paper);color:var(--ink);
+    font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:17px;line-height:1.45}
+  body{margin:0;height:100%;overflow:hidden;background:var(--paper)}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touch-action:manipulation;
+    user-select:none;-webkit-user-select:none}
+  button:focus-visible{outline:3px solid var(--act);outline-offset:2px}
+  .screen{position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);
+    width:100%;max-width:480px;background:var(--paper);
+    display:none;flex-direction:column;overflow:hidden}
+  .screen.on{display:flex}
+  .screen:not(.on){display:none!important}
+  h1,h2,h3{margin:0;line-height:1.15;font-weight:700}
+  p{margin:0 0 .8em}
+
+  /* Home */
+  .home{padding:28px 22px 40px;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .home .home-back{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;width:auto;
+    border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);border-radius:10px;
+    padding:0 14px;height:44px;font-size:16px;font-weight:600;line-height:1;margin-bottom:18px}
+  .home .home-back span{font-size:19px;line-height:1}
+  .home h1{font-size:34px;letter-spacing:-.01em;margin-bottom:10px}
+  .home .lede{font-size:18px;color:var(--ink-soft);margin-bottom:28px}
+  .lesson-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+  .lesson-card h2{font-size:22px;margin-bottom:6px}
+  .lesson-card .meta{color:var(--ink-soft);font-size:15px;margin-bottom:14px}
+  .lesson-card .need{font-size:15px;margin-bottom:16px}
+  .lesson-card .need b{font-weight:600}
+  .row{display:flex;gap:10px}
+  .btn{flex:1;padding:16px 14px;border-radius:12px;font-size:18px;font-weight:600;text-align:center;
+    border:1.5px solid var(--ink);min-height:56px}
+  .btn.primary{background:var(--act);border-color:var(--act);color:#fff}
+  .btn.primary:active{background:var(--act-deep)}
+  .btn.quiet{border-color:var(--line);color:var(--ink-soft)}
+  .textlink{display:block;width:100%;text-align:center;padding:14px 8px;color:var(--act-deep);
+    font-size:16px;font-weight:600;margin-bottom:6px}
+  .note{font-size:14px;color:var(--ink-soft);margin-top:20px}
+
+  /* Prepare */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;gap:12px}
+  .topbar .back{font-size:16px;color:var(--ink-soft);padding:8px 4px}
+  .topbar .title{font-size:15px;color:var(--ink-soft)}
+  .prep{padding:6px 18px 60px;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .prep h1{font-size:26px;margin:8px 0 6px}
+  .prep .lede{color:var(--ink-soft);margin-bottom:22px}
+  .prep-step{border-top:1px solid var(--line);padding:18px 0}
+  .prep-step .head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:8px}
+  .prep-step .head h3{font-size:19px}
+  .prep-step .head .t{color:var(--ink-soft);font-size:15px;white-space:nowrap}
+  .prep-step details{margin-top:6px}
+  .prep-step summary{cursor:pointer;color:var(--act-deep);font-weight:600;font-size:15px;padding:6px 0;list-style:none}
+  .prep-step summary::-webkit-details-marker{display:none}
+  .prep-step summary::before{content:"+ ";}
+  .prep-step details[open] summary::before{content:"\2212  ";}
+  .pivots{margin-top:8px;font-size:15px;color:var(--ink-soft);padding-left:18px}
+  .pivots li{margin-bottom:8px}
+  .pivots b{color:var(--ink);font-weight:600}
+  .sticky-foot{position:sticky;bottom:0;padding:12px 18px calc(22px + env(safe-area-inset-bottom));
+    background:linear-gradient(to top,var(--paper) 70%,transparent)}
+
+  /* Live */
+  .live{display:flex;flex-direction:column;min-height:0}
+  .live-top{padding:12px 18px 0}
+  .live-top .strip{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--ink-soft);gap:12px}
+  .live-top .strip .exit{color:var(--ink-soft);padding:6px 0}
+  .live-top .strip .clock{font-variant-numeric:tabular-nums}
+  .progress{height:4px;background:var(--line);border-radius:2px;margin:10px 0 0;overflow:hidden}
+  .progress i{display:block;height:100%;background:var(--ink);width:0;transition:width .3s}
+  .live-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:10px 18px 0}
+  .live-head h2{font-size:24px;letter-spacing:-.01em;margin:0;flex:1}
+  .step-time{text-align:right;flex:0 0 auto;font-variant-numeric:tabular-nums}
+  .step-time b{display:block;font-size:26px;font-weight:700;line-height:1.05}
+  .step-time small{font-size:12px;color:var(--ink-soft)}
+  .step-time.warn b{color:var(--warn)}
+  .step-time.late b{color:var(--late)}
+  .live-body{flex:1;min-height:0;overflow-y:auto;padding:10px 18px 12px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .live-body h2{font-size:26px;letter-spacing:-.01em;margin:8px 0 12px}
+  .toggle{display:inline-flex;background:var(--tint);border-radius:999px;padding:3px;margin-bottom:12px}
+  .toggle button{padding:8px 16px;border-radius:999px;font-size:15px;font-weight:600;color:var(--ink-soft)}
+  .toggle button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+  .live-foot{padding:10px 18px calc(22px + env(safe-area-inset-bottom));display:flex;gap:8px;
+    border-top:1px solid var(--line);background:var(--paper)}
+  .live-foot .btn{min-height:64px;font-size:18px}
+  .done-screen{padding:40px 22px;flex:1;min-height:0;overflow-y:auto}
+  .done-screen h1{font-size:30px;margin-bottom:10px}
+  .done-screen p{color:var(--ink-soft);font-size:17px}
+  .done-screen .stats{margin:22px 0;font-size:17px;color:var(--ink);background:#fff;
+    border:1px solid var(--line);border-radius:14px;padding:16px}
+  .done-screen .stats p{color:var(--ink);margin:0 0 .5em}
+  .done-screen .stats p:last-child{margin:0}
+
+  /* Sheet */
+  .scrim{position:fixed;inset:0;background:rgba(27,36,48,.45);display:none;z-index:9}
+  .scrim.on{display:block}
+  .sheet{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:480px;background:var(--paper);
+    border-radius:18px 18px 0 0;padding:16px 18px calc(26px + env(safe-area-inset-bottom));z-index:10;display:none;
+    max-height:88%;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -6px 30px rgba(0,0,0,.2)}
+  .sheet.on{display:block}
+  .sheet .handle{display:block;width:44px;height:4px;padding:0;background:var(--line);border-radius:2px;margin:0 auto 14px}
+  .choice.other{border-style:dashed;color:var(--ink-soft);font-weight:600}
+  .sheet h3{font-size:19px;margin-bottom:4px}
+  .sheet .sub{color:var(--ink-soft);font-size:15px;margin-bottom:14px}
+  .choice{display:block;width:100%;text-align:left;padding:16px;border:1.5px solid var(--line);background:#fff;
+    border-radius:12px;font-size:18px;font-weight:600;margin-bottom:10px;min-height:58px}
+  .choice:active{border-color:var(--ink)}
+  .pivot{background:#fff;border:1.5px solid var(--act);border-radius:12px;padding:16px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  .pivot p{margin-bottom:.6em}
+  .pivot p:last-child{margin-bottom:0}
+  .sheet .row .btn{min-height:56px}
+  .cancel{display:block;width:100%;text-align:center;padding:14px;color:var(--ink-soft);font-size:16px}
+
+  /* Block language: what you do, what you say, what goes on the board */
+  .blk{margin:0 0 16px}
+  .lbl{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.02em;padding:2px 8px;border-radius:6px;margin-bottom:6px}
+  .b-you{color:var(--ink-soft);font-size:15px;line-height:1.4;font-style:italic;padding-left:12px;border-left:2px dotted var(--line)}
+  .b-you .lbl{background:var(--tint);color:var(--ink-soft);font-style:normal}
+  .b-say{position:relative;padding:12px 14px 12px 18px;border-left:5px solid var(--lime);background:#fff;border-radius:0 12px 12px 0;font-size:20px;line-height:1.45}
+  .b-say .lbl{background:var(--lime);color:var(--ink)}
+  .b-say p{margin:0 0 .6em}
+  .b-say p:last-child{margin-bottom:0}
+  .b-say.short{font-size:18px}
+  .b-board{background:var(--board);color:var(--chalk);border-radius:12px;padding:12px 16px 14px;
+    font-size:18px;line-height:1.5}
+  .b-board .lbl{background:rgba(255,255,255,.14);color:var(--chalk);font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+  .b-board p{margin:0 0 .35em}
+  .b-do{background:var(--learn);border-radius:12px;padding:12px 16px 14px;font-size:17px;line-height:1.4;color:var(--learn-ink)}
+  .b-do .lbl{background:var(--act);color:#fff}
+  .b-do p{margin:0}
+  .legend{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;align-items:center}
+  .legend span{font-size:13px;color:var(--ink-soft)}
+
+  /* Watching-for line and Note button */
+  .focus-line{margin:6px 18px 0;font-size:13px;color:var(--ink-soft);display:none}
+  .focus-line.on{display:block}
+  .focus-line b{color:var(--ink);font-weight:600}
+  .live-foot .btn.mark{flex:0 0 30%;border-color:var(--ink);background:#fff;font-size:15px;line-height:1.2;
+    user-select:none;-webkit-user-select:none}
+  .live-foot .btn.mark.hot{background:var(--ink);color:#fff}
+  .live-foot .btn.help{flex:0 0 22%;border-color:var(--line);background:#fff;font-size:16px}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:110px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+  .toast.on{opacity:1}
+
+  /* Mentor conversation */
+  .chat{padding:6px 18px 40px;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .m{max-width:92%;margin:0 0 12px;padding:12px 16px;border-radius:14px;font-size:17px;line-height:1.45}
+  .m.mentor{background:#fff;border:1px solid var(--line);border-bottom-left-radius:4px}
+  .m.teacher{background:var(--ink);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+  .m p{margin:0 0 .6em}.m p:last-child{margin-bottom:0}
+  .moment{border-left:4px solid var(--ink);background:var(--tint);padding:10px 14px;border-radius:0 10px 10px 0;margin:0 0 10px;font-size:16px}
+  .moment .k{font-weight:700}
+  .moment .l{color:var(--ink-soft);font-size:14px;margin-top:2px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+  .chip{padding:12px 16px;min-height:46px;border:1.5px solid var(--ink);border-radius:999px;font-size:16px;
+    background:#fff;text-align:left}
+  .chip:active{background:var(--tint)}
+  .chip.sm{border-color:var(--line);font-size:15px;padding:8px 12px}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  textarea,input[type=text]{width:100%;font:inherit;font-size:17px;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);resize:none}
+  .inline-form{display:flex;gap:8px;margin-bottom:14px}
+  .inline-form input{flex:1}
+  .inline-form .btn{flex:0 0 auto;min-height:48px;padding:10px 16px;font-size:16px}
+  .remember{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:18px;font-size:15px}
+  .remember h3{font-size:15px;color:var(--ink-soft);font-weight:600;margin-bottom:6px}
+  .remember p{margin:0 0 .4em}
+  .remember p:last-child{margin:0}
+
+  @media (prefers-reduced-motion:reduce){.progress i{transition:none}}
+
+  /* ---------- intro slides ---------- */
+  #s-intro{padding:0;overflow:hidden}
+  #s-intro .deck{display:flex;flex:1;min-height:0;overflow-x:auto;overflow-y:hidden;
+    scroll-snap-type:x mandatory;scrollbar-width:none;width:100%}
+  #s-intro .deck::-webkit-scrollbar{display:none}
+  #s-intro .slide{flex:0 0 100%;scroll-snap-align:center;height:100%;overflow-y:auto;min-height:0;
+    display:flex;flex-direction:column;justify-content:flex-start;justify-content:safe center;
+    padding:44px 24px 100px;overscroll-behavior:contain}
+  #s-intro h1{font-size:34px;line-height:1.08;margin:0 0 14px;letter-spacing:-.01em}
+  #s-intro h2{font-size:25px;line-height:1.15;margin:0 0 14px}
+  #s-intro .eyebrow{display:inline-block;align-self:flex-start;font-size:13px;font-weight:700;
+    background:var(--lime);color:var(--ink);padding:3px 9px;border-radius:6px;margin-bottom:18px}
+  #s-intro .lede{font-size:19px;color:var(--ink-soft)}
+  #s-intro .small{font-size:15px;color:var(--ink-soft)}
+  #s-intro .credit{font-size:13px;color:var(--ink-soft);border-top:1px solid var(--line);
+    padding-top:12px;margin-top:20px}
+  #s-intro .arms p{margin:0 0 .8em;padding-left:14px;border-left:4px solid var(--line)}
+  #s-intro .arms p.here{border-left-color:var(--lime)}
+  #s-intro .opencard{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--act);
+    border-radius:16px;padding:20px;margin:0 0 18px;color:inherit}
+  #s-intro .opencard h3{font-size:21px;margin:0 0 8px}
+  #s-intro .opencard p{margin:0 0 14px;color:var(--ink-soft);font-size:15px}
+  #s-intro .opencard .go{display:inline-block;background:var(--act);color:#fff;font-weight:600;font-size:17px;
+    padding:13px 20px;border-radius:11px}
+  #s-intro ol{margin:0;padding-left:20px;font-size:16px}
+  #s-intro ol li{margin-bottom:7px}
+  #s-intro .panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;font-size:16px}
+  #s-intro .panel p:last-child{margin:0}
+  #s-intro .nav{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;
+    justify-content:space-between;gap:14px;padding:14px 20px calc(18px + env(safe-area-inset-bottom));
+    background:linear-gradient(to top,var(--paper) 62%,transparent)}
+  #s-intro .dots{display:flex;gap:7px;flex:1;justify-content:center}
+  #s-intro .dots button{width:9px;height:9px;padding:11px;border-radius:50%;background:var(--line);
+    background-clip:content-box;box-sizing:content-box}
+  #s-intro .dots button.on{background:var(--act);transform:scale(1.25)}
+  #s-intro .arrow{border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
+    min-width:46px;min-height:46px;font-size:19px}
+  #s-intro .arrow:disabled{opacity:.32}
+  @media (prefers-reduced-motion:no-preference){#s-intro .deck{scroll-behavior:smooth}}
+
+  /* Before you teach: one question, one list */
+  .pick-body{flex:1;min-height:0;overflow-y:auto;padding:4px 18px 20px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .pick-body .recall{font-size:15px;color:var(--ink-soft);background:var(--tint);
+    border-radius:12px;padding:12px 14px;margin:0 0 20px}
+  .pick-q{font-size:25px;margin:0 0 16px}
+  .opt{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);
+    border-radius:12px;padding:15px 16px;margin-bottom:10px;font-size:17px;min-height:56px;line-height:1.35}
+  .opt.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  #focus-input{margin-top:6px}
+  .pick-foot{padding:12px 18px calc(22px + env(safe-area-inset-bottom));border-top:1px solid var(--line);
+    background:var(--paper)}
+  .pick-hint{font-size:14px;color:var(--ink-soft);text-align:center;margin:10px 0 0}
+
+  .pick-step{font-size:13px;color:var(--ink-soft);margin:0 0 10px}
+  .scale .opt{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .scale .opt i{font-style:normal;font-size:14px;color:var(--ink-soft);flex:0 0 auto}
+  .scale .opt.on i{color:#fff}
+  .why-label{font-size:15px;color:var(--ink-soft);margin:16px 0 6px}
+  .ai-note{border-left:4px solid var(--lime);background:#fff;border-radius:0 12px 12px 0;
+    padding:12px 14px;font-size:15px;color:var(--ink-soft);margin:16px 0 0}
+  .ai-note b{color:var(--ink);display:block;margin-bottom:4px;font-size:14px}
+  .suggested{background:#fff;border:1.5px solid var(--act);border-radius:12px;padding:16px;margin:0 0 12px}
+  .suggested small{display:block;color:var(--ink-soft);font-size:14px;margin-bottom:4px}
+  .suggested b{font-size:19px;line-height:1.3}
+
+  .why-label .star{color:var(--lime);font-size:17px}
+  .why-label .wishmark{color:var(--act);font-size:16px}
+  .starline{margin:0 0 .4em}
+  .starline .star{color:var(--lime)}
+  .starline .wishmark{color:var(--act)}
+
+  .live-top .strip .guide{border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);
+    border-radius:50%;width:34px;height:34px;min-width:34px;font-size:15px;font-weight:700;line-height:1;
+    flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+  .guide-item{border-top:1px solid var(--line);padding:14px 0}
+  .guide-item:first-of-type{border-top:0}
+  .guide-item b{display:block;font-size:17px;margin-bottom:4px}
+  .guide-item p{margin:0;font-size:16px;color:var(--ink-soft);line-height:1.45}
+
+  #s-intro .where p{margin:0 0 .8em;padding-left:14px;border-left:4px solid var(--lime);font-size:16px}
+  #s-intro .where p.off{border-left-color:var(--line)}
+  #s-intro .where b{display:block;font-size:13px;text-transform:none;color:var(--ink-soft);margin-bottom:2px}
+
+  #s-intro .rules p{margin:0 0 .9em;padding-left:14px;border-left:4px solid var(--lime);font-size:16px}
+  #s-intro .rules b{display:block;margin-bottom:2px}
+
+  .multi{font-size:14px;color:var(--ink-soft);margin:-8px 0 12px}
+
+  .live-top .strip .stepnav-wrap{display:flex;align-items:center;gap:6px}
+  .live-top .strip .stepnav{border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;
+    width:32px;height:32px;min-width:32px;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center}
+  .live-top .strip .stepnav:disabled{opacity:.3}
+
+  .big-idea{font-size:18px;line-height:1.45;border-left:4px solid var(--lime);padding-left:14px;margin:0 0 22px}
+  .pt-h{font-size:13px;font-weight:700;color:var(--ink-soft);margin:0 0 6px}
+  .pts{margin:0 0 20px;padding-left:20px}
+  .pts li{margin-bottom:8px;font-size:16px;line-height:1.45}
+  .pt-p{font-size:16px;line-height:1.45;margin:0 0 20px}
+  .taught{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
+  .taught .tick{display:inline-block;background:var(--lime);color:var(--ink);font-size:12px;font-weight:700;
+    padding:2px 8px;border-radius:6px;margin-bottom:8px}
+  .taught h2{font-size:19px;margin-bottom:6px}
+  .taught p{margin:0 0 .4em;font-size:15px;color:var(--ink-soft)}
+  .taught p b{color:var(--ink)}
+  .lesson-card .soonnote{font-size:14px;color:var(--ink-soft);margin:10px 0 0;text-align:center}
+  .btn:disabled{opacity:.45}
+
+  .linkish{color:var(--act-deep);font-weight:600;font-size:15px;text-decoration:underline}
+</style>
+</head>
+<body>
+
+<!-- INTRO SLIDES -->
+<section class="screen on" id="s-intro">
+  <div class="deck" id="deck">
+    <section class="slide">
+      <span class="eyebrow">Early prototype</span>
+      <h1>Kula Teach</h1>
+      <p class="lede">Support for teachers, on the phone they already carry, in the lesson they are about to teach.</p>
+      <p class="small">This is a mock-up of an early idea, built to test whether the shape is right before we build anything properly. Seven screens. Swipe, or use the arrows.</p>
+      <p class="credit">Built for our application to the Injini AI for Education Venture Builder and Incubation Program, September 2026.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Teacher support arrives at the wrong time</h2>
+      <p>It comes as a workshop in the holidays, a policy document, or a subject advisor once a year.</p>
+      <p>Almost nothing reaches a teacher while they are planning Tuesday's lesson, and almost nobody gives them feedback on their own work.</p>
+      <p class="lede" style="margin-top:6px">Teachers are not short of information. They are short of a colleague who has time.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Three arms</h2>
+      <div class="arms">
+        <p><b>Content.</b> Subject knowledge and the debates behind it, built on the material already in Kula Revise.</p>
+        <p class="here"><b>Practice.</b> Lessons a teacher can actually teach, with a short conversation before and after.</p>
+        <p><b>Assessment.</b> Marking and moderating, built on what examiners credit.</p>
+      </div>
+      <p class="small">This prototype is the practice arm. It is what gets a teacher to open the app at all, because it gives them something they need tomorrow morning.</p>
+      <p class="small">We start with Grade 12 History, where our material and our examining experience already are, and expand subject by subject. Practice and reflection work for any teacher from day one; only the content and the marking judgement are built per subject.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Where the AI sits</h2>
+      <div class="where">
+        <p><b>Before</b> Reads your check-in and suggests one thing to work on, and where in today's lesson it will matter.</p>
+        <p class="off"><b>During</b> Nothing. No AI runs while you teach. The lesson and every alternative are already on the phone, so there is no data cost and nothing to wait for.</p>
+        <p><b>After</b> Takes you back through what you kept, your two stars and a wish, and where the lesson ran long. It asks the questions; you do the thinking. It never grades the lesson.</p>
+        <p><b>Across lessons</b> Holds you to the one thing you said you would try, and sees what one lesson cannot: the same problem in the same place, a wish you keep repeating. It keeps a short record per lesson, not a transcript.</p>
+        <p><b>Yours to see</b> Read it, change it, delete it. It stays on your phone. No school or district sees a named teacher's record: the moment reflection becomes evidence, honest answers stop.</p>
+      </div>
+      <p class="small">It also drafts the lessons, from Kula Revise material, with a subject specialist checking each one.</p>
+    </section>
+
+    <section class="slide">
+      <h2>How we are building the mentor</h2>
+      <div class="rules">
+        <p><b>Ask, then check.</b> It says what it noticed and asks whether that is right. If the teacher says no, it drops its reading and works from theirs instead.</p>
+        <p><b>Only what the teacher gave it.</b> What they kept, their two stars and a wish, where the lesson ran long. Never a verdict on the lesson as a whole.</p>
+        <p><b>One question past the first answer.</b> The first explanation is usually the easy one. It asks once more, then stops.</p>
+        <p><b>End with one thing to try.</b> Small enough to do in the next lesson, and counted the next time round.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>What is real</h2>
+      <p class="small">All of this is a mock-up, so the polish is not the point. What matters is which parts are real.</p>
+      <div class="panel">
+        <p><b>Real:</b> the lesson. Written to CAPS for Grade 12 History, Origins of the Cold War. A teacher could teach it tomorrow, including the alternatives inside every step.</p>
+        <p><b>Not yet real:</b> the mentor. Every line it says is written by hand, to show the shape of the conversation before we build it.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Try it</h2>
+      <button class="opencard" onclick="show('s-home')">
+        <h3>Today's lesson</h3>
+        <p>One full Grade 12 History lesson, one step at a time: what to say, what to write on the board, what the learners do.</p>
+        <span class="go">Open it</span>
+      </button>
+      <p class="small">Open it on a phone if you can. It is built for one hand.</p>
+      <p class="small">While you are in there, try <b>Help</b> midway through a step. There is a <b>?</b> in the corner that explains the buttons.</p>
+    </section>
+  </div>
+  <div class="nav">
+    <button class="arrow" id="deck-prev" aria-label="Previous screen">&lsaquo;</button>
+    <div class="dots" id="deck-dots"></div>
+    <button class="arrow" id="deck-next" aria-label="Next screen">&rsaquo;</button>
+  </div>
+</section>
+
+<!-- HOME -->
+<section class="screen home" id="s-home">
+  <button class="home-back" onclick="show('s-intro')"><span>&lsaquo;</span> Back</button>
+  <h1>Your lesson, one step at a time.</h1>
+  <p class="lede">Read it before class. Then hold your phone and tap through it while you teach.</p>
+
+  <div class="remember" id="remember"></div>
+  <div id="lesson-slot"></div>
+
+  <p class="note">The whole lesson is already on your phone. It works with no signal. Nothing you tap in class is sent anywhere.</p>
+</section>
+
+<!-- KEY POINTS -->
+<section class="screen" id="s-points">
+  <div class="topbar">
+    <button class="back" onclick="show('s-home')">&lsaquo; Back</button>
+    <span class="title">Key points</span>
+    <span style="width:52px"></span>
+  </div>
+  <div class="pick-body">
+    <h1 class="pick-q">What this lesson is really about</h1>
+    <p class="big-idea">Three leaders signed the same words and each meant something different by them. That is not dishonesty. It is how agreements get made, and it is why the alliance broke.</p>
+
+    <h3 class="pt-h">They should leave able to say</h3>
+    <ul class="pts">
+      <li>What each leader wanted at Yalta, and why: Stalin a safe border, Roosevelt help against Japan and the UN, Churchill a free Poland.</li>
+      <li>Why Stalin wanted friendly neighbours, using the numbers: 27 million Soviet dead, and the war fought on Soviet land.</li>
+      <li>That "free elections" meant one thing to Stalin and another to Roosevelt, and both signed it.</li>
+    </ul>
+
+    <h3 class="pt-h">What they usually get wrong</h3>
+    <p class="pt-p">Learners want someone to blame, so they decide Stalin was lying. Move them past this. The words of the agreement were unclear on purpose. Clear words would have stopped all three from signing it.</p>
+
+    <h3 class="pt-h">What earns marks</h3>
+    <p class="pt-p">A fact with a because. "The alliance was breaking because they disagreed" earns almost nothing. "Because 27 million Soviet citizens had died and Stalin would not accept unfriendly neighbours" earns the mark.</p>
+
+    <h3 class="pt-h">You need</h3>
+    <p class="pt-p">A board, and chalk or a marker. Learners need exercise books and pens. Nothing to print, nothing to project.</p>
+  </div>
+  <div class="pick-foot">
+    <button class="btn primary" style="width:100%" onclick="openFocus()">Start the lesson</button>
+  </div>
+</section>
+
+<!-- PREPARE -->
+<section class="screen" id="s-prep">
+  <div class="topbar">
+    <button class="back" onclick="show('s-home')">&lsaquo; Back</button>
+    <span class="title">Read it first</span>
+    <span style="width:52px"></span>
+  </div>
+  <div class="prep" id="prep-body">
+    <h1>The Alliance: Yalta, 1945</h1>
+    <p class="lede">Read the whole lesson once. Say the lines out loud at least once, especially the opening. In class you will see one step at a time, with two buttons: <b>Remember this</b>, for a moment you want to discuss afterwards, and <b>Help</b>, for when a step is not working.</p>
+    <div id="prep-steps"></div>
+  </div>
+  <div class="sticky-foot">
+    <button class="btn primary" style="width:100%" onclick="openFocus()">Start the lesson</button>
+  </div>
+</section>
+
+<!-- LIVE -->
+<section class="screen live" id="s-live">
+  <div class="live-top">
+    <div class="strip">
+      <button class="exit" onclick="exitLive()">End lesson</button>
+      <span class="stepnav-wrap">
+        <button class="stepnav" id="prev-step" onclick="prevStep()" aria-label="Previous step">&lsaquo;</button>
+        <span id="live-count">Step 1 of 8</span>
+      </span>
+      <span class="clock" id="lesson-timer">0:00 / 40:00</span>
+      <button class="guide" onclick="openGuide()" aria-label="What the buttons do">?</button>
+    </div>
+    <div class="progress"><i id="live-bar"></i></div>
+  </div>
+  <div class="live-head">
+    <h2 id="step-title"></h2>
+    <div class="step-time" id="step-time"><b id="step-timer">3:00</b><small id="step-plan">of 3 min</small></div>
+  </div>
+  <div class="focus-line" id="focus-line"></div>
+  <div class="live-body" id="live-body"></div>
+  <div class="live-foot">
+    <button class="btn mark" id="mark-btn" onclick="addMark()">Remember this</button>
+    <button class="btn help" onclick="openHelp()">Help</button>
+    <button class="btn primary" id="next-btn" onclick="nextStep()">Next step</button>
+  </div>
+</section>
+
+<!-- FOCUS (before the lesson) -->
+<section class="screen" id="s-focus">
+  <div class="topbar">
+    <button class="back" onclick="focusBack()">&lsaquo; Back</button>
+    <span class="title">Before you teach</span>
+    <span style="width:52px"></span>
+  </div>
+  <div class="pick-body" id="focus-body"></div>
+  <div class="pick-foot" id="focus-foot"></div>
+</section>
+
+<!-- NOTE (straight after the lesson) -->
+<section class="screen" id="s-note">
+  <div class="topbar"><span></span><span class="title">After the lesson</span><span></span></div>
+  <div class="pick-body">
+    <h1 class="pick-q">Two stars and a wish</h1>
+    <p class="recall">Two stars are two things that worked. The wish is the one thing you would change next time. Twenty seconds, while you still remember it.</p>
+    <p class="why-label"><span class="star">&#9733;</span> Something that worked</p>
+    <input type="text" id="star-1" placeholder="e.g. The Monday story settled them">
+    <p class="why-label"><span class="star">&#9733;</span> Something else that worked</p>
+    <input type="text" id="star-2" placeholder="e.g. They copied the board without being asked">
+    <p class="why-label"><span class="wishmark">&#10022;</span> One thing you would change</p>
+    <input type="text" id="wish" placeholder="e.g. Give them longer in pairs">
+  </div>
+  <div class="pick-foot">
+    <div class="row">
+      <button class="btn quiet" onclick="saveNote(true)">Skip</button>
+      <button class="btn primary" onclick="saveNote(false)">Save and talk</button>
+    </div>
+    <p class="pick-hint">One star is fine if that is all you have.</p>
+  </div>
+</section>
+
+<!-- DEBRIEF -->
+<section class="screen" id="s-debrief">
+  <div class="topbar"><span></span><span class="title">After the lesson</span><span></span></div>
+  <div class="chat" id="debrief-chat"></div>
+</section>
+
+<!-- DONE -->
+<section class="screen" id="s-done">
+  <div class="done-screen">
+    <h1>Lesson finished.</h1>
+    <p>Everything is saved on your phone.</p>
+    <div class="stats" id="done-stats"></div>
+    <div class="row" style="margin-top:20px">
+      <button class="btn" onclick="show('s-prep')">Read the lesson again</button>
+      <button class="btn primary" onclick="show('s-home')">Home</button>
+    </div>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<!-- HELP SHEET -->
+<div class="scrim" id="scrim" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet">
+  <button class="handle" onclick="closeSheet()" aria-label="Close"></button>
+  <div id="sheet-body"></div>
+</div>
+
+<script>
+/* ---------- LESSON (already on the phone, works offline) ---------- */
+const LESSON = {
+  title:"The Alliance: Yalta, 1945",
+  total:40,
+  steps:[
+  {
+    title:"Start with a story",
+    mins:3,
+    blocks:[
+      {t:"you", x:"Books closed. Do not say what the story is for. Tell it, then wait."},
+      {t:"say", full:["Books closed for one minute. I want to tell you about something that happened in an office on a Monday morning.",
+        "On Friday, three people ended a meeting. They agreed who would do what. On Monday, one of them says the writing up was clearly her job. Another says the words were only that someone would write it up. Nobody said who.",
+        "The same note. Two readings. And neither person is lying."],
+        short:"Tell the Monday story: three people agreed on Friday, on Monday they disagree about what was agreed, and nobody is lying."},
+      {t:"board", x:["The same note.","Two readings."]},
+      {t:"you", x:"Write it. Then stop talking for a few seconds."}
+    ],
+    pivots:{
+      noisy:"Stop talking. Write the four words on the board in silence, and wait. When the class is quiet, point at the board and say: this happens to you too. Then start the story again.",
+      lost:"Leave out the office. Ask instead: have you ever agreed something with a friend, and later you each remembered it differently? Take one answer. Then say: keep that in your mind.",
+      time:"Tell the story in three sentences. Three people agreed on Friday. On Monday they disagree about what was agreed. Nobody is lying. Write the board words and move on."
+    }
+  },
+  {
+    title:"Ask what would prove it",
+    mins:4,
+    blocks:[
+      {t:"say", full:["Turn to the person next to you. One minute. What would prove who was supposed to write it up?"],
+        short:"Ask: what would prove who was supposed to write it up?"},
+      {t:"do", x:"Pairs, one minute. Then three learners give an answer."},
+      {t:"you", x:"Do not say who is correct. Collect three answers."},
+      {t:"say", full:["Here is the honest answer. Nothing would prove it. The note was written so that everyone could leave the meeting. It was unclear at exactly the point that mattered. That was not an accident. Agreements are often made this way."],
+        short:"Land it: nothing proves it. The note was written to end the meeting, not to answer the question."},
+      {t:"board", x:["Unclear at the point that matters"]}
+    ],
+    pivots:{
+      lost:"They are looking for a correct answer. Say: there is no correct answer here, and that is the point. Give the last line now and move on.",
+      early:"Ask the whole class: why would three sensible adults agree to an unclear note? Take two answers. Listen for the words easy or quick.",
+      time:"Leave out the pair talk. Ask the class, take one answer, give the last line, move on."
+    }
+  },
+  {
+    title:"Move to Yalta, 1945",
+    mins:6,
+    blocks:[
+      {t:"say", full:["Now we go to February 1945. The war in Europe is almost over. Three leaders sit down in a town called Yalta to decide what happens next."],
+        short:"Set the scene: February 1945, the war nearly over, three leaders meet at Yalta."},
+      {t:"board", x:["Yalta, Feb 1945","Stalin: safe borders, friendly neighbours","Roosevelt: help against Japan, the UN","Churchill: a strong Britain, a free Poland"]},
+      {t:"do", x:"Copy the board into exercise books while you talk."},
+      {t:"say", full:["Stalin wants the Soviet Union to be safe. He wants friendly countries on his western border, so that nobody can invade Russia again. Roosevelt wants Soviet help against Japan, and he wants the new United Nations to work. Churchill wants Britain to stay strong, and he wants a free Poland, because Britain went to war in 1939 for Poland.",
+        "Three leaders. Three different needs. And they must still leave Yalta with one signed agreement. Remember Monday morning."],
+        short:"Explain each line on the board in one sentence. End with: they still need words that all three can sign. Remember Monday morning."},
+      {t:"you", x:"Point at the board as you speak about each leader."}
+    ],
+    pivots:{
+      lost:"Stop at the names. Ask: which of these three is most afraid of being invaded again, and why? Take one answer. Then point at Stalin's line and continue.",
+      noisy:"Stop. Ask the class to copy the board in silence for two minutes. Walk around the room. Start talking again only when it is quiet.",
+      time:"Write only the names and one phrase for each. Say one sentence about what each leader wanted. Leave out the Monday link and move on."
+    }
+  },
+  {
+    title:"What the war had cost",
+    mins:5,
+    blocks:[
+      {t:"board", x:["27 million Soviet dead (fighting on Soviet land)","450 000 British dead","418 000 American dead (no fighting at home)"]},
+      {t:"you", x:"Write the numbers first. Say nothing for ten seconds."},
+      {t:"say", full:["Look at these numbers. Soviet dead: 27 million, and the fighting was on Soviet land. British dead: 450 thousand. American dead: 418 thousand, and no fighting on American land at all.",
+        "Now write one sentence in your book. Start it like this. Stalin wanted friendly countries on his border because..."],
+        short:"Read the numbers out. Then set the sentence: Stalin wanted friendly countries on his border because..."},
+      {t:"do", x:"Write one sentence: Stalin wanted friendly countries on his border because..."}
+    ],
+    pivots:{
+      lost:"They are not linking the numbers to Stalin. Ask: if your house had been burned down twice, what would you want from your neighbours? Take one answer, then set the sentence again.",
+      early:"Ask two learners to read their sentence aloud. Ask the class which sentence uses the numbers as evidence. That is the sentence that earns marks.",
+      time:"Leave out the writing. Say the sentence yourself: Stalin wanted a safe border because 27 million Soviet people had died and the war was fought on his land. Ask them to copy it. Move on."
+    }
+  },
+  {
+    title:"The words they all signed",
+    mins:7,
+    blocks:[
+      {t:"you", x:"Read the promise twice, slowly. This is the main idea of the lesson."},
+      {t:"say", full:["At Yalta all three signed a promise. Listen carefully. I will read it twice. The freed peoples of Europe would be helped to form governments through free elections.",
+        "In pairs. What does free mean to Stalin? What does free mean to Roosevelt? Two minutes."],
+        short:"Read the promise: governments through free elections. Then ask pairs what free means to Stalin, and to Roosevelt."},
+      {t:"board", x:["\u201Cfree elections\u201D"]},
+      {t:"do", x:"Pairs, two minutes. Then a few learners share."},
+      {t:"say", full:["To Stalin, free meant free from governments that are against the Soviet Union. To Roosevelt, free meant that the people choose. Both men signed. Both went home satisfied. The same note. Two readings."],
+        short:"Land it: to Stalin free meant free of enemies, to Roosevelt free meant the people choose. The same note, two readings."},
+      {t:"board", x:["Stalin: free from enemies of the USSR","Roosevelt: the people choose"]}
+    ],
+    pivots:{
+      lost:"Do the pair task with the whole class instead. Ask: if Stalin runs the election, who wins? Take one answer. Then ask: if the people choose, who might win? Write both meanings on the board.",
+      noisy:"End the pair talk early. Say: pens down, look here. Write both meanings on the board yourself and explain them. Leave out the sharing.",
+      time:"Leave out the pair talk. Read the promise once. Write both meanings on the board and explain them in two sentences. This is the main idea, so do not leave out the board.",
+      early:"Ask: was this a mistake, or was it clever? Take two answers. Listen for anyone who says it was the only way to get all three to sign."
+    }
+  },
+  {
+    title:"Every fact needs a because",
+    mins:8,
+    blocks:[
+      {t:"say", full:["This is the part the exam pays for. In your books, write one sentence that starts: The alliance was already breaking at Yalta because...",
+        "Your because must use something from the board. A number, a name, or a phrase. A fact with no because earns almost nothing. A because with no fact earns nothing."],
+        short:"Set the sentence. Insist on one fact from the board, and one because."},
+      {t:"board", x:["The alliance was already breaking at Yalta because ..."]},
+      {t:"do", x:"Write one sentence with a fact and a because. About five minutes."},
+      {t:"you", x:"Walk around the room. Look for sentences with no fact in them."},
+      {t:"say", full:["Two of you read your sentence aloud. Everybody else, listen for the because."],
+        short:"Two learners read aloud. The class listens for the because."}
+    ],
+    pivots:{
+      lost:"Give a weak example first. Write on the board: The alliance was breaking because they disagreed. Ask: what is missing? Then ask them to improve it in their books.",
+      early:"Ask for a second sentence that starts with However, and gives one reason the alliance still held in February 1945. Hint: Japan was not yet defeated.",
+      time:"Cut to three minutes. Say: one sentence, one fact, one because. Take one reader, not two."
+    }
+  },
+  {
+    title:"Write the dates",
+    mins:4,
+    blocks:[
+      {t:"board", x:["1917: communists take power in Russia","Feb 1945: Yalta","8 May 1945: Germany surrenders"]},
+      {t:"do", x:"Copy the three dates, with one line for each."},
+      {t:"say", full:["Three dates. Copy them exactly. 1917: a communist government takes power in Russia, and Western mistrust starts here. February 1945: Yalta, the promise that each leader understood differently. 8 May 1945: Germany surrenders, and the shared enemy that held the alliance together is gone."],
+        short:"Say one line for each date: mistrust starts in 1917, Yalta is the promise read two ways, 8 May the shared enemy is gone."}
+    ],
+    pivots:{
+      time:"Write the dates only. Tell the class to copy the dates now, and to write the reasons at home from the textbook.",
+      early:"Cover the board with your hand. Ask the class to say the three dates back to you, in order."
+    }
+  },
+  {
+    title:"Last sentence, then end",
+    mins:3,
+    blocks:[
+      {t:"say", full:["One last thing. Write one sentence in your book, and then you may pack up. Why could three leaders sign the same words and mean different things?"],
+        short:"Last question: why could three leaders sign the same words and mean different things?"},
+      {t:"do", x:"One sentence in books, then pack up."},
+      {t:"you", x:"Collect nothing. Read three books over their shoulders while they write."},
+      {t:"say", full:["Next lesson we look at what happened when they tried to use those words in Poland. Books away."],
+        short:"Say what comes next: Poland. Books away."}
+    ],
+    pivots:{
+      time:"Ask the last question aloud and take one answer from the class. Say what comes next lesson. End there.",
+      noisy:"Ask them to answer in silence, and to stay seated until you say they may pack up. Wait for silence before you speak."
+    }
+  }
+]};
+
+const PIVOT_LABELS = {
+  lost:"They do not understand",
+  noisy:"The class is noisy",
+  time:"Not enough time",
+  early:"They finished early"
+};
+
+/* ---------- STATE ---------- */
+let mode="say", idx=0, stepStart=0, lessonStart=0, tick=null, adjustLog=[], stepEnds=[];
+let wakeLock=null;
+
+/* ---------- MEMORY (one earlier lesson, for the prototype) ---------- */
+const MEMORY = {
+  lessons:[
+    { title:"Why history has more than one side", focus:"keeping their attention through the middle of the lesson",
+      wish:"Read less from the textbook and ask more",
+      tryNext:"Ask a question before reading anything aloud, not after." }
+  ]
+};
+let current=null;
+
+function lastLesson(){ return MEMORY.lessons[MEMORY.lessons.length-1]; }
+
+let taught=false;
+const NEXT_LESSON={
+  title:"The Potsdam Conference, July 1945",
+  meta:"Grade 12 History \u00b7 Origins of the Cold War \u00b7 Lesson 2 of 5 \u00b7 40 minutes",
+  line:"What happened when the Yalta words met reality. Roosevelt is dead, Churchill is voted out mid-conference, and the bomb has been tested."
+};
+function renderHome(){
+  const slot=document.getElementById('lesson-slot');
+  if(!slot) return;
+  const l=lastLesson();
+  slot.innerHTML = taught ? `
+    <div class="taught">
+      <span class="tick">Taught today</span>
+      <h2>The Alliance: Yalta, 1945</h2>
+      ${l&&l.wish?`<p>Your wish: <b>${esc(l.wish)}</b></p>`:''}
+      ${l&&l.tryNext?`<p>Next lesson you will try: <b>${esc(l.tryNext)}</b></p>`:''}
+    </div>
+    <div class="lesson-card">
+      <h2>Next lesson: ${esc(NEXT_LESSON.title)}</h2>
+      <div class="meta">${NEXT_LESSON.meta}</div>
+      <div class="need">${esc(NEXT_LESSON.line)}</div>
+      <div class="row">
+        <button class="btn" disabled>Key points</button>
+        <button class="btn primary" disabled>Start the lesson</button>
+      </div>
+      <p class="soonnote">Only the Yalta lesson is built in this prototype.</p>
+    </div>
+    <div class="row"><button class="btn" style="width:100%" onclick="teachAgain()">Teach the Yalta lesson again</button></div>`
+  : `
+    <div class="lesson-card">
+      <h2>The Alliance: Yalta, 1945</h2>
+      <div class="meta">Grade 12 History &middot; Origins of the Cold War &middot; Lesson 1 of 5 &middot; 40 minutes</div>
+      <div class="need"><b>You need:</b> a board, and chalk or a marker. Learners need exercise books and pens. Nothing to print. Nothing to project.</div>
+      <div class="row">
+        <button class="btn" onclick="show('s-points')">Key points</button>
+        <button class="btn primary" onclick="openFocus()">Start the lesson</button>
+      </div>
+      <p class="soonnote"><button class="linkish" onclick="show('s-prep')">Or read the whole lesson first</button></p>
+    </div>`;
+}
+function teachAgain(){ taught=false; renderHome(); openFocus(); }
+
+function renderRemember(){
+  const l=lastLesson(); const el=document.getElementById('remember');
+  if(!l){ el.style.display='none'; return; }
+  el.style.display='block';
+  el.innerHTML=`<h3>From your last lesson</h3>
+    <p>${esc(l.title)}</p>
+    <p>You were working on: <b>${esc(l.focus)}</b></p>
+    <p>You said you would try: <b>${esc(l.tryNext)}</b></p>`;
+}
+
+/* ---------- START ---------- */
+function newRecord(focus){
+  return { title:LESSON.title, focus:focus||"", marks:[], stars:[], wish:"", answers:[], tryNext:"" };
+}
+function startNow(){
+  if(!current) current=newRecord("");
+  startLive();
+}
+
+/* ---------- BEFORE YOU TEACH: check in on the last lesson, then set a focus ---------- */
+const MOOD=[
+  {k:5,t:"It went well",        n:"I would teach it again the same way"},
+  {k:4,t:"Mostly fine",         n:"A few parts did not land"},
+  {k:3,t:"Mixed",               n:"Some of it worked, some did not"},
+  {k:2,t:"Hard going",          n:"I was pushing uphill"},
+  {k:1,t:"It did not work",     n:"I want to do it differently"}
+];
+const WELL=[
+  "They were settled and working",
+  "Most of them understood it",
+  "The activity worked",
+  "I got through what I planned",
+  "One or two surprised me"
+];
+const IMPROVE=[
+  {t:"Too much of me talking",        f:"Talking less and letting them work"},
+  {t:"I lost them in the middle",     f:"Keeping their attention in the middle"},
+  {t:"Not enough time at the end",    f:"Getting to the end, even unfinished"},
+  {t:"They struggled with the content", f:"Checking they understand before moving on"},
+  {t:"The pair work did not work",    f:"Making the pair talk work"}
+];
+
+let checkin={mood:null,well:[],wellOther:"",wellWhy:"",improve:[],improveOther:"",improveWhy:""};
+let pendingFocus="", ciStep=0;
+
+function openFocus(){
+  checkin={mood:null,well:[],wellOther:"",wellWhy:"",improve:[],improveOther:"",improveWhy:""};
+  pendingFocus=""; ciStep=0;
+  renderCheckin(); show('s-focus');
+}
+function setStep(n){ ciStep=n; renderCheckin(); }
+function focusBack(){
+  if(ciStep===1) saveWhy('well');
+  if(ciStep===2) saveWhy('improve');
+  if(ciStep>0) setStep(ciStep-1); else show('s-home');
+}
+
+function renderCheckin(){
+  const body=document.getElementById('focus-body'), foot=document.getElementById('focus-foot');
+  const l=lastLesson();
+
+  if(ciStep===0){
+    body.innerHTML=`<p class="pick-step">1 of 3</p>
+      <h1 class="pick-q">Before you start: your last lesson with this class. How did it go?</h1>
+      ${l?`<p class="recall">${esc(l.title)}${l.wish?`<br>Last time you wished: ${esc(l.wish)}`:''}</p>`:''}
+      <div class="scale">${MOOD.map(m=>`<button class="opt${checkin.mood===m.k?' on':''}" onclick="pickMood(${m.k})">
+        <span>${m.t}</span><i>${m.n}</i></button>`).join("")}</div>`;
+    foot.innerHTML=`<button class="btn quiet" style="width:100%" onclick="confirmFocus()">Skip and start the lesson</button>`;
+    return;
+  }
+
+  if(ciStep===1){
+    body.innerHTML=`<p class="pick-step">2 of 3</p>
+      <h1 class="pick-q">What went well?</h1>
+      <p class="multi">Choose as many as you like.</p>
+      ${WELL.map((w,i)=>`<button class="opt${checkin.well.includes(w)?' on':''}" onclick="pickWell(${i})">${esc(w)}</button>`).join("")}
+      <input type="text" id="well-other" value="${esc(checkin.wellOther||'')}" placeholder="Or something else, in your own words" oninput="typeWell(this.value)">
+      <p class="why-label">Why do you think that was? (optional)</p>
+      <input type="text" id="well-why" value="${esc(checkin.wellWhy)}" placeholder="In a few words">`;
+    foot.innerHTML=`<div class="row">
+        <button class="btn quiet" onclick="saveWhy('well');setStep(0)">Back</button>
+        <button class="btn primary" onclick="saveWhy('well');setStep(2)">Next</button></div>`;
+    return;
+  }
+
+  if(ciStep===2){
+    body.innerHTML=`<p class="pick-step">3 of 3</p>
+      <h1 class="pick-q">What could have been better?</h1>
+      <p class="multi">Choose as many as you like.</p>
+      ${IMPROVE.map((m,i)=>`<button class="opt${checkin.improve.includes(m.t)?' on':''}" onclick="pickImprove(${i})">${esc(m.t)}</button>`).join("")}
+      <input type="text" id="improve-other" value="${esc(checkin.improveOther||'')}" placeholder="Or something else, in your own words" oninput="typeImprove(this.value)">
+      <p class="why-label">What do you think was behind it? (optional)</p>
+      <input type="text" id="improve-why" value="${esc(checkin.improveWhy)}" placeholder="In a few words">`;
+    foot.innerHTML=`<div class="row">
+        <button class="btn quiet" onclick="saveWhy('improve');setStep(1)">Back</button>
+        <button class="btn primary" onclick="saveWhy('improve');setStep(3)">Next</button></div>`;
+    return;
+  }
+
+  // step 3: what the mentor makes of it
+  const match=IMPROVE.find(m=>checkin.improve.includes(m.t));
+  if(!pendingFocus) pendingFocus = match ? match.f : (l?l.tryNext:"");
+  const low = checkin.mood!==null && checkin.mood<=2;
+  body.innerHTML=`
+    <p class="pick-step">Before you go in</p>
+    <div class="m mentor" style="max-width:100%">
+      ${low?`<p>That happens, and it usually says more about the lesson than the teacher. Let us take one thing from it.</p>`:''}
+      ${allImprove().length?`<p>Last time you said: ${allImprove().map(esc).join("; ")}.${checkin.improveWhy?` You put it down to ${esc(checkin.improveWhy)}.`:''}</p>`:`<p>Let us pick one thing to work on today.</p>`}
+      <p>Today's lesson has two places where that matters: Yalta at step 3, and the promise at step 5.</p>
+    </div>
+    <div class="suggested"><small>Today you are working on</small><b>${esc(pendingFocus||"Nothing in particular")}</b></div>
+    <p class="why-label">Or choose something else</p>
+    ${IMPROVE.map((m,i)=>`<button class="opt${pendingFocus===m.f?' on':''}" onclick="pickFocus(${i})">${esc(m.f)}</button>`).join("")}
+    <input type="text" id="focus-input" placeholder="Or say it in your own words" oninput="typeFocus(this.value)">
+`;
+  foot.innerHTML=`<div class="row">
+      <button class="btn quiet" onclick="setStep(2)">Back</button>
+      <button class="btn primary" onclick="openStartSheet()">Start the lesson</button></div>`;
+}
+
+function pickMood(k){ checkin.mood=k; setStep(1); }
+function toggle(arr,v){ const i=arr.indexOf(v); if(i<0) arr.push(v); else arr.splice(i,1); return arr; }
+function pickWell(i){ toggle(checkin.well, WELL[i]); renderCheckin(); }
+function pickImprove(i){
+  toggle(checkin.improve, IMPROVE[i].t);
+  const first=IMPROVE.find(m=>checkin.improve.includes(m.t));
+  pendingFocus = first ? first.f : "";
+  renderCheckin();
+}
+function typeWell(v){ checkin.wellOther=v; }
+function typeImprove(v){ checkin.improveOther=v; }
+function allWell(){ return [...checkin.well, ...(checkin.wellOther.trim()?[checkin.wellOther.trim()]:[])]; }
+function allImprove(){ return [...checkin.improve, ...(checkin.improveOther.trim()?[checkin.improveOther.trim()]:[])]; }
+function pickFocus(i){ pendingFocus=IMPROVE[i].f; renderCheckin(); }
+function typeFocus(v){
+  pendingFocus=v.trim();
+  document.querySelectorAll('#focus-body .opt').forEach(b=>b.classList.remove('on'));
+}
+function saveWhy(which){
+  const el=document.getElementById(which==='well'?'well-why':'improve-why');
+  if(!el) return;
+  if(which==='well') checkin.wellWhy=el.value.trim(); else checkin.improveWhy=el.value.trim();
+}
+function confirmFocus(){
+  current=newRecord(pendingFocus);
+  current.checkin={...checkin};
+  startLive();
+}
+
+/* ---------- HELPERS ---------- */
+function show(id){
+  if(id==='s-home') renderHome();
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+function fmt(s){ const m=Math.floor(Math.abs(s)/60), r=Math.abs(s)%60; return (s<0?"\u2212":"")+m+":"+String(r).padStart(2,"0"); }
+function esc(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/'/g,"&#39;"); }
+
+function renderBlock(b, short){
+  if(b.t==='you') return `<div class="blk b-you"><span class="lbl">Only for you</span><div>${esc(b.x)}</div></div>`;
+  if(b.t==='say'){
+    const body = short ? `<p>${esc(b.short)}</p>` : b.full.map(p=>`<p>${esc(p)}</p>`).join("");
+    return `<div class="blk b-say${short?' short':''}"><span class="lbl">Say</span>${body}</div>`;
+  }
+  if(b.t==='board') return `<div class="blk b-board"><span class="lbl">On the board</span>${b.x.map(p=>`<p>${esc(p)}</p>`).join("")}</div>`;
+  if(b.t==='do') return `<div class="blk b-do"><span class="lbl">Learners</span><p>${esc(b.x)}</p></div>`;
+  return "";
+}
+
+/* ---------- PREPARE ---------- */
+function renderPrep(){
+  const el=document.getElementById('prep-steps');
+  el.innerHTML=`<div class="legend">
+      <span class="lbl" style="background:var(--tint);color:var(--ink-soft)">Only for you</span><span>nobody else sees this</span>
+      <span class="lbl" style="background:var(--lime);color:var(--ink)">Say</span><span>say it out loud</span>
+      <span class="lbl" style="background:var(--board);color:var(--chalk)">On the board</span>
+      <span class="lbl" style="background:var(--act);color:#fff">Learners</span><span>what the class does</span>
+    </div>` +
+  LESSON.steps.map((s,i)=>`
+    <div class="prep-step">
+      <div class="head"><h3>${i+1}. ${esc(s.title)}</h3><span class="t">${s.mins} min</span></div>
+      ${s.blocks.map(b=>renderBlock(b,false)).join("")}
+      <details><summary>If this does not work</summary><ul class="pivots">${Object.entries(s.pivots).map(([k,v])=>`<li><b>${PIVOT_LABELS[k]}.</b> ${esc(v)}</li>`).join("")}</ul></details>
+    </div>`).join("");
+}
+
+/* ---------- LIVE ---------- */
+async function startLive(){
+  idx=0; adjustLog=[]; stepEnds=[];
+  lessonStart=Date.now();
+  renderStep();
+  show('s-live');
+  if(tick) clearInterval(tick);
+  tick=setInterval(updateTimers,1000);
+  try{ if('wakeLock' in navigator) wakeLock=await navigator.wakeLock.request('screen'); }catch(e){}
+}
+function renderStep(){
+  const s=LESSON.steps[idx];
+  const fl=document.getElementById('focus-line');
+  if(idx===0){ fl.innerHTML='<b>Remember this</b> saves a moment you want to discuss afterwards.'; fl.classList.add('on'); }
+  else { fl.classList.remove('on'); }
+  stepStart=Date.now();
+  if(!lessonStart) lessonStart=Date.now();
+  document.getElementById('step-title').textContent=s.title;
+  document.getElementById('live-count').textContent=`Step ${idx+1} of ${LESSON.steps.length}`;
+  document.getElementById('prev-step').disabled = idx===0;
+  document.getElementById('live-bar').style.width=((idx)/LESSON.steps.length*100)+"%";
+  document.getElementById('step-plan').textContent=`of ${s.mins} min`;
+  document.getElementById('next-btn').textContent = idx===LESSON.steps.length-1 ? "Finish" : "Next step";
+  const body=document.getElementById('live-body');
+  body.innerHTML=`
+    <div class="toggle">
+      <button class="${mode==='say'?'on':''}" onclick="setMode('say')">Full words</button>
+      <button class="${mode==='brief'?'on':''}" onclick="setMode('brief')">Short</button>
+    </div>
+    <div id="content"></div>
+  `;
+  renderContent();
+  body.scrollTop=0;
+  updateTimers();
+}
+function renderContent(){
+  const s=LESSON.steps[idx];
+  document.getElementById('content').innerHTML = s.blocks.map(b=>renderBlock(b, mode==='brief')).join("");
+}
+function setMode(m){ mode=m; document.querySelectorAll('.toggle button').forEach((b,i)=>b.classList.toggle('on',(i===0)===(m==='say'))); renderContent(); }
+function updateTimers(){
+  if(!lessonStart) lessonStart=Date.now();
+  if(!stepStart) stepStart=Date.now();
+  const s=LESSON.steps[idx];
+  const left=s.mins*60-Math.floor((Date.now()-stepStart)/1000);
+  document.getElementById('step-timer').textContent=fmt(left);
+  document.getElementById('step-time').className='step-time'+(left<0?' late':(left<=45?' warn':''));
+  const lu=Math.floor((Date.now()-lessonStart)/1000);
+  document.getElementById('lesson-timer').textContent=`${fmt(lu)} / ${LESSON.total}:00`;
+}
+function prevStep(){
+  if(idx===0) return;
+  stepEnds.pop();
+  idx--;
+  renderStep();
+}
+function nextStep(){
+  stepEnds.push({step:idx, secs:Math.floor((Date.now()-stepStart)/1000)});
+  if(idx<LESSON.steps.length-1){ idx++; renderStep(); }
+  else finishLive();
+}
+function finishLive(){
+  clearInterval(tick); tick=null;
+  if(!current) current=newRecord("");
+  if(wakeLock){ wakeLock.release().catch(()=>{}); wakeLock=null; }
+  ['star-1','star-2','wish'].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=''; });
+  show('s-note');
+}
+function exitLive(){ if(confirm("End the lesson now?")) finishLive(); }
+
+/* ---------- NOTE BUTTON: one tap, one meaning ---------- */
+function addMark(){
+  if(!current) return;
+  const b=document.getElementById('mark-btn');
+  current.marks.push({step:idx, at:Math.floor((Date.now()-lessonStart)/1000), into:Math.floor((Date.now()-stepStart)/1000), kind:"", why:""});
+  b.classList.add('hot'); setTimeout(()=>b.classList.remove('hot'),200);
+  if(navigator.vibrate) navigator.vibrate(30);
+  toast("Saved for the discussion afterwards");
+}
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('on'),1300);
+}
+
+/* ---------- BEFORE YOU GO IN: popup on starting ---------- */
+function openStartSheet(){
+  document.getElementById('sheet-body').innerHTML=`
+    <h3>Before you go in</h3>
+    <div class="guide-item"><b>Remember this</b>
+      <p>A moment in class you want to remember for a discussion afterwards. One tap, nothing to type.</p></div>
+    <div class="guide-item"><b>Help</b>
+      <p>For when a step is not working. You get one thing to do right now.</p></div>
+    <div class="guide-item"><b>What happens to your answers</b>
+      <p>They stay on your phone. They are used to suggest what to watch for, to build the conversation after the lesson, and to notice when the same thing keeps coming up across lessons. You can read, change or delete any of it.</p></div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn primary" style="width:100%" onclick="closeSheet();confirmFocus()">Start the lesson</button>
+    </div>`;
+  document.getElementById('scrim').classList.add('on');
+  document.getElementById('sheet').classList.add('on');
+}
+
+/* ---------- WHAT THE BUTTONS DO ---------- */
+function openGuide(){
+  document.getElementById('sheet-body').innerHTML=`
+    <h3>What the buttons do</h3>
+    <div class="sub">You can come back to this at any time.</div>
+    <div class="guide-item"><b>Remember this</b>
+      <p>A moment in class you want to remember for a discussion afterwards. One tap, nothing to type. The mentor brings each one back after the lesson.</p></div>
+    <div class="guide-item"><b>Help</b>
+      <p>For when a step is not working. Say what is happening and you get one thing to do right now, written for this step of this lesson. It does not interrupt the class.</p></div>
+    <div class="guide-item"><b>Next step</b>
+      <p>Moves you on. The countdown is a guide, not a rule. Running over is normal, and the mentor will show you where it happened.</p></div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn primary" style="width:100%" onclick="closeSheet()">Back to the lesson</button>
+    </div>`;
+  document.getElementById('scrim').classList.add('on');
+  document.getElementById('sheet').classList.add('on');
+}
+
+/* ---------- HELP SHEET ---------- */
+function openHelp(){
+  const s=LESSON.steps[idx];
+  const keys=Object.keys(s.pivots);
+  document.getElementById('sheet-body').innerHTML=`
+    <h3>What is happening?</h3>
+    <div class="sub">Choose one. You will get one thing to do right now.</div>
+    ${keys.map(k=>`<button class="choice" onclick="showPivot('${k}')">${PIVOT_LABELS[k]}</button>`).join("")}
+    <button class="choice other" onclick="showOther()">Something else &mdash; let me type it</button>`;
+  document.getElementById('scrim').classList.add('on');
+  document.getElementById('sheet').classList.add('on');
+}
+function showPivot(k){
+  const s=LESSON.steps[idx];
+  adjustLog.push({step:idx, kind:k, at:Date.now()-lessonStart});
+  const isLast=idx===LESSON.steps.length-1;
+  let extra="";
+  if(k==='time' && !isLast) extra=`<button class="btn" onclick="skipStep()">Leave out this step</button>`;
+  if(k==='early' && !isLast) extra=`<button class="btn" onclick="closeSheet();nextStep()">Go to the next step</button>`;
+  document.getElementById('sheet-body').innerHTML=`
+    <h3>${PIVOT_LABELS[k]}</h3>
+    <div class="sub">Step ${idx+1}: ${esc(s.title)}</div>
+    <div class="pivot"><p>${esc(s.pivots[k])}</p></div>
+    <div class="row">
+      ${extra}
+      <button class="btn primary" onclick="closeSheet()">Back to the lesson</button>
+    </div>`;
+}
+function showOther(){
+  const st=LESSON.steps[idx];
+  document.getElementById('sheet-body').innerHTML=`
+    <h3>What is happening?</h3>
+    <div class="sub">Step ${idx+1}: ${esc(st.title)}</div>
+    <textarea id="other-text" rows="3" placeholder="In a few words"></textarea>
+    <div class="row" style="margin-top:12px">
+      <button class="btn quiet" onclick="openHelp()">Back</button>
+      <button class="btn primary" onclick="submitOther()">Ask</button>
+    </div>`;
+}
+function submitOther(){
+  const v=(document.getElementById('other-text')||{value:''}).value.trim();
+  const st=LESSON.steps[idx];
+  adjustLog.push({step:idx, kind:'other', text:v, at:Date.now()-lessonStart});
+  document.getElementById('sheet-body').innerHTML=`
+    <h3>${v?esc(v):'Something else'}</h3>
+    <div class="sub">Step ${idx+1}: ${esc(st.title)}</div>
+    <div class="pivot"><p>In this prototype the answers are written in advance, so there is nothing scripted for this one. In the product the mentor reads what you typed along with the step you are on, and gives you one thing to do right now.</p>
+      <p>It is saved, and it will come up in the conversation after the lesson.</p></div>
+    <div class="row">
+      <button class="btn primary" style="width:100%" onclick="closeSheet()">Back to the lesson</button>
+    </div>`;
+}
+function skipStep(){ closeSheet(); nextStep(); }
+function closeSheet(){
+  document.getElementById('scrim').classList.remove('on');
+  document.getElementById('sheet').classList.remove('on');
+}
+
+/* ---------- AFTER THE LESSON ---------- */
+function saveNote(skip){
+  if(skip){ current.stars=[]; current.wish=""; }
+  else{
+    const g=id=>{ const e=document.getElementById(id); return e?e.value.trim():""; };
+    current.stars=[g('star-1'),g('star-2')].filter(Boolean);
+    current.wish=g('wish');
+  }
+  renderDebrief();
+}
+const MAX_MOMENTS = 3;
+function renderDebrief(){
+  const chat=document.getElementById('debrief-chat');
+  const total=stepEnds.reduce((a,s)=>a+s.secs,0);
+  const over=stepEnds.filter(s=>s.secs>LESSON.steps[s.step].mins*60+30).map(s=>s.step+1);
+  const marks=current.marks;
+  const shown=marks.slice(0,MAX_MOMENTS);
+
+  let html=`<div class="m mentor">
+    ${current.focus?`<p>You were working on <b>${esc(current.focus)}</b>.</p>`:''}
+    <p>${marks.length?`You asked me to remember ${marks.length} thing${marks.length===1?'':'s'}.`:`You did not ask me to remember anything this time.`} The lesson ran ${fmt(total)} of ${LESSON.total}:00${over.length?`, and step${over.length>1?'s':''} ${over.join(", ")} ran long`:''}.</p>
+    ${(current.stars&&current.stars.length)?`<p>Your stars: ${current.stars.map(esc).join("; ")}.</p>`:''}
+    ${current.wish?`<p>Your wish: ${esc(current.wish)}.</p>`:''}
+    ${marks.length>MAX_MOMENTS?`<p>Let us look at the first ${MAX_MOMENTS}. The rest are saved.</p>`
+      :(marks.length?`<p>Let us take them in order.</p>`:`<p>That is fine. Looking back, is there something you would keep now?</p>`)}
+  </div>`;
+
+  shown.forEach((f,i)=>{
+    const s=LESSON.steps[f.step];
+    html+=`<div class="moment">
+      <div class="k">Step ${f.step+1}: ${esc(s.title)}</div>
+      <div class="l">${fmt(f.at)} into the lesson, ${fmt(f.into)} into the step</div></div>
+    <div class="chips">
+      <button class="chip sm" onclick="setKind(${i},this,'good')">It went well</button>
+      <button class="chip sm" onclick="setKind(${i},this,'problem')">It was a problem</button>
+    </div>
+    <div class="m mentor"><p>What was happening in the room at that moment?</p></div>
+    <textarea rows="2" id="ans-${i}" placeholder="In your own words"></textarea>
+    <div style="height:16px"></div>`;
+  });
+
+  if(!marks.length){
+    html+=`<textarea rows="2" id="ans-0" placeholder="In your own words"></textarea><div style="height:16px"></div>`;
+  }
+
+  const tries=[
+    "Ask a question before reading anything aloud",
+    "Do the pair task with the whole class first, then in pairs",
+    "Write on the board first, then speak",
+    "Cut the second Say block at step 5 to one sentence"
+  ];
+  html+=`<div class="m mentor"><p>One thing to try in the next lesson. Choose one, or write your own. I will bring it up next time.</p></div>
+    <div class="chips">${tries.map(t=>`<button class="chip" onclick="finishDebrief('${esc(t)}')">${t}</button>`).join("")}</div>
+    <div class="inline-form"><input type="text" id="try-input" placeholder="Or your own"><button class="btn" onclick="finishDebrief(document.getElementById('try-input').value)">Set</button></div>`;
+  chat.innerHTML=html;
+  show('s-debrief');
+}
+function setKind(i,el,kind){
+  el.parentNode.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  if(current.marks[i]) current.marks[i].kind=kind;
+}
+function finishDebrief(t){
+  t=(t||"").trim(); if(!t) return;
+  current.marks.slice(0,MAX_MOMENTS).forEach((m,i)=>{ const e=document.getElementById('ans-'+i); if(e) m.why=e.value.trim(); });
+  current.tryNext=t;
+  MEMORY.lessons.push({ title:LESSON.title, focus:current.focus||"nothing in particular", wish:current.wish, tryNext:t });
+
+  const good=current.marks.filter(m=>m.kind==='good').length;
+  const prob=current.marks.filter(m=>m.kind==='problem').length;
+  const steps=[...new Set(adjustLog.map(a=>a.step))].length;
+  document.getElementById('done-stats').innerHTML=`
+    <p>You kept ${current.marks.length} thing${current.marks.length===1?'':'s'}${good||prob?` (${good} went well, ${prob} a problem)`:''}.</p>
+    <p>You asked for help in ${steps} step${steps===1?'':'s'}.</p>
+    <p>Next lesson you will try: <b>${esc(t)}</b></p>`;
+  taught=true;
+  renderRemember();
+  show('s-done');
+}
+
+/* ---------- INTRO SLIDES ---------- */
+(function(){
+  const deck=document.getElementById('deck');
+  const slides=[...deck.querySelectorAll('.slide')];
+  const dots=document.getElementById('deck-dots');
+  const bPrev=document.getElementById('deck-prev'), bNext=document.getElementById('deck-next');
+  let at=0;
+  dots.innerHTML=slides.map((s,i)=>`<button aria-label="Screen ${i+1}"></button>`).join("");
+  const dotEls=[...dots.children];
+  dotEls.forEach((d,i)=>d.onclick=()=>deckGo(i));
+  function sync(){
+    dotEls.forEach((d,i)=>d.classList.toggle('on',i===at));
+    bPrev.disabled=at===0; bNext.disabled=at===slides.length-1;
+  }
+  function deckGo(i){
+    at=Math.max(0,Math.min(slides.length-1,i));
+    deck.scrollTo({left:at*deck.clientWidth});
+    sync();
+  }
+  bPrev.onclick=()=>deckGo(at-1);
+  bNext.onclick=()=>deckGo(at+1);
+  deck.addEventListener('scroll',()=>{
+    const i=Math.round(deck.scrollLeft/deck.clientWidth);
+    if(i!==at){ at=i; sync(); }
+  });
+  window.addEventListener('keydown',e=>{
+    if(!document.getElementById('s-intro').classList.contains('on')) return;
+    if(e.key==='ArrowRight') deckGo(at+1);
+    if(e.key==='ArrowLeft') deckGo(at-1);
+  });
+  window.addEventListener('resize',()=>deck.scrollTo({left:at*deck.clientWidth,behavior:'auto'}));
+  sync();
+})();
+
+renderPrep();
+renderHome();
+renderRemember();
+</script>
+</body>
+</html>
