@@ -134,21 +134,21 @@
   .sheet .row .btn{min-height:56px}
   .cancel{display:block;width:100%;text-align:center;padding:14px;color:var(--ink-soft);font-size:16px}
 
-  /* Block language: what you do, what you say, what goes on the board */
-  .blk{margin:0 0 16px}
-  .lbl{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.02em;padding:2px 8px;border-radius:6px;margin-bottom:6px}
-  .b-you{color:var(--ink-soft);font-size:15px;line-height:1.4;font-style:italic;padding-left:12px;border-left:2px dotted var(--line)}
-  .b-you .lbl{background:var(--tint);color:var(--ink-soft);font-style:normal}
-  .b-say{position:relative;padding:12px 14px 12px 18px;border-left:5px solid var(--lime);background:#fff;border-radius:0 12px 12px 0;font-size:20px;line-height:1.45}
+  /* Block language: one card shape, distinguished by label and accent */
+  .blk{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px 16px;margin:0 0 14px}
+  .lbl{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.02em;padding:3px 9px;
+    border-radius:6px;margin-bottom:10px}
+  .b-you{background:var(--tint);border-color:transparent;color:var(--ink-soft);font-size:16px;line-height:1.45;font-style:italic}
+  .b-you .lbl{background:#fff;color:var(--ink-soft);font-style:normal}
+  .b-say{border-left:5px solid var(--lime);font-size:20px;line-height:1.45}
   .b-say .lbl{background:var(--lime);color:var(--ink)}
   .b-say p{margin:0 0 .6em}
   .b-say p:last-child{margin-bottom:0}
   .b-say.short{font-size:18px}
-  .b-board{background:var(--board);color:var(--chalk);border-radius:12px;padding:12px 16px 14px;
-    font-size:18px;line-height:1.5}
-  .b-board .lbl{background:rgba(255,255,255,.14);color:var(--chalk);font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+  .b-board{background:var(--board);border-color:var(--board);color:var(--chalk);font-size:18px;line-height:1.55;letter-spacing:.01em}
+  .b-board .lbl{background:rgba(255,255,255,.16);color:var(--chalk)}
   .b-board p{margin:0 0 .35em}
-  .b-do{background:var(--learn);border-radius:12px;padding:12px 16px 14px;font-size:17px;line-height:1.4;color:var(--learn-ink)}
+  .b-do{background:var(--learn);border-color:transparent;color:var(--learn-ink);font-size:17px;line-height:1.45}
   .b-do .lbl{background:var(--act);color:#fff}
   .b-do p{margin:0}
   .legend{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;align-items:center}
@@ -276,10 +276,11 @@
 
   .multi{font-size:14px;color:var(--ink-soft);margin:-8px 0 12px}
 
-  .live-top .strip .stepnav-wrap{display:flex;align-items:center;gap:6px}
-  .live-top .strip .stepnav{border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;
-    width:32px;height:32px;min-width:32px;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center}
-  .live-top .strip .stepnav:disabled{opacity:.3}
+  .live-top .strip .stepnav{display:inline-flex;align-items:center;gap:5px;border:1.5px solid var(--line);
+    background:#fff;color:var(--ink);border-radius:9px;padding:0 12px;height:36px;font-size:15px;font-weight:600;
+    line-height:1;flex:0 0 auto}
+  .live-top .strip .stepnav span{font-size:18px;line-height:1}
+  .live-top .strip .stepnav:disabled{opacity:.35}
 
   .big-idea{font-size:18px;line-height:1.45;border-left:4px solid var(--lime);padding-left:14px;margin:0 0 22px}
   .pt-h{font-size:13px;font-weight:700;color:var(--ink-soft);margin:0 0 6px}
@@ -300,6 +301,39 @@
   #s-intro .cost{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;
     font-size:15px;color:var(--ink-soft);line-height:1.4;margin:4px 0 14px}
   #s-intro .cost b{display:block;color:var(--ink);font-size:16px;margin-bottom:2px}
+
+
+  .phase-tabs{display:flex;gap:6px;background:var(--tint);border-radius:12px;padding:4px;margin:6px 0 18px}
+  .phase-tabs button{flex:1;padding:10px 6px;border-radius:9px;font-size:15px;font-weight:600;
+    color:var(--ink-soft);line-height:1.2}
+  .phase-tabs button em{display:block;font-style:normal;font-size:12px;font-weight:400;opacity:.8}
+  .phase-tabs button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+
+  #s-intro .evidence p{margin:0 0 14px;padding-left:14px;border-left:4px solid var(--lime);font-size:16px}
+  #s-intro .evidence b{color:var(--ink)}
+  #s-intro .cite{display:block;font-size:13px;color:var(--ink-soft);margin-top:3px}
+
+  .shape p{margin:0 0 10px;padding-left:14px;border-left:4px solid var(--lime);font-size:16px;line-height:1.4}
+  .shape b{display:inline-block;min-width:66px}
+  .shape em{font-style:normal;color:var(--ink-soft);font-size:14px;margin-right:8px}
+
+  .remember .commit{font-size:17px;line-height:1.4;margin:0}
+  .remember .commit b{font-weight:700}
+
+  .term{display:inline;padding:0;font:inherit;color:var(--act-deep);font-weight:600;
+    border-bottom:2px dotted var(--lime);line-height:inherit;text-align:left}
+  .term:active{background:var(--tint)}
+  .term-def{font-size:17px;line-height:1.5;margin:0}
+  .termbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:22px;padding-top:16px;
+    border-top:1px solid var(--line)}
+  .termbar-l{width:100%;font-size:13px;font-weight:700;color:var(--ink-soft)}
+
+
+  .langnote{font-size:14px;color:var(--ink-soft);line-height:1.4;margin:16px 0 0;
+    padding-top:14px;border-top:1px solid var(--line)}
+
+
+  .cancel{display:block;width:100%;text-align:center;padding:14px;color:var(--ink-soft);font-size:16px}
 </style>
 </head>
 <body>
@@ -311,26 +345,36 @@
       <span class="eyebrow">Early prototype</span>
       <h1>Kula Teach</h1>
       <p class="lede">Support for teachers, on the phone they already carry, in the lesson they are about to teach.</p>
-      <p class="small">This is a mock-up of an early idea, built to test whether the shape is right before we build anything properly. Seven screens. Swipe, or use the arrows.</p>
+      <p class="small">This is a mock-up of an early idea, built to test whether the shape is right before we build anything properly. Eight screens. Swipe, or use the arrows.</p>
       <p class="credit">Built for our application to the Injini AI for Education Venture Builder and Incubation Program, September 2026.</p>
     </section>
 
     <section class="slide">
       <h2>Teacher support arrives at the wrong time</h2>
       <p>It comes as a workshop in the holidays, a policy document, or a subject advisor once a year.</p>
-      <p>Almost nothing reaches a teacher while they are planning Tuesday's lesson, and almost nobody gives them feedback on their own work.</p>
-      <p class="lede" style="margin-top:6px">Teachers are not short of information. They are short of a colleague who has time.</p>
+      <p>Almost nothing reaches a teacher while they are planning Tuesday's lesson, and almost nobody looks at the work they actually do.</p>
+      <p class="lede" style="margin-top:6px">Support is not missing. It arrives too far from the classroom to change what happens in it.</p>
     </section>
 
     <section class="slide">
-      <h2>Three arms</h2>
-      <div class="arms">
-        <p><b>Content.</b> Subject knowledge and the debates behind it, built on the material already in Kula Revise.</p>
-        <p class="here"><b>Practice.</b> Lessons a teacher can actually teach, with a short conversation before and after.</p>
-        <p><b>Assessment.</b> Marking and moderating, built on what examiners credit.</p>
+      <h2>What happens when subject knowledge is thin</h2>
+      <div class="evidence">
+        <p><b>Results follow it.</b> The first nationally representative South African study to test teachers' own subject knowledge found a positive effect on learner performance in both poorer and wealthier schools. Its own conclusion matters as much: knowing the subject is necessary, but being able to transfer it meaningfully matters more.<span class="cite">Shepherd, 2015</span></p>
+        <p><b>And it is common.</b> South African secondary teachers are regularly assigned subjects they were never trained to teach, and the social sciences are a common destination for it.<span class="cite">De Wet, 2004; Du Plessis &amp; Mestry, 2019</span></p>
       </div>
-      <p class="small">This prototype is the practice arm. It is what gets a teacher to open the app at all, because it gives them something they need tomorrow morning.</p>
-      <p class="small">We start with Grade 12 History, where our material and our examining experience already are, and expand subject by subject. Practice and reflection work for any teacher from day one; only the content and the marking judgement are built per subject.</p>
+      <p class="small">In the room it looks like this. A teacher who is unsure reads from the textbook, talks for longer, and sets copying. Unexpected questions get closed down. Marking becomes ticks rather than corrections. The lesson turns into memorisation, not because anyone chose that, but because it is the safe option.</p>
+      <p class="small">Content and pedagogy are not two products. They are the two things that go wrong together.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Two arms</h2>
+      <div class="arms">
+        <p><b>Content.</b> Full, detailed lessons that cover the curriculum, with the teaching strategies to use in the classroom, written per subject. Built on the material already in Kula Revise. We start with History and expand into other subjects.</p>
+        <p class="here"><b>Pedagogy.</b> Lessons a teacher can actually teach, with a short conversation before and after.</p>
+      </div>
+      <p class="small">This prototype is the pedagogy arm. It is what gets a teacher to open the app at all, because it gives them something they need tomorrow morning.</p>
+      <p class="small">We start with Grade 12 History, where our material and our examining experience already are, and expand subject by subject. Pedagogy and reflection work for any teacher from day one; only the content is built per subject.</p>
+      <p class="small">Marking and moderating is the natural third arm, and it is where our examining experience compounds. We are not building it inside this programme.</p>
     </section>
 
     <section class="slide">
@@ -344,22 +388,19 @@
       </div>
       <div class="cost"><b>About 10 KB a lesson</b>
         Under a fifth of a cent on the most expensive prepaid data in South Africa. A month of teaching it every day costs a teacher about three cents.</div>
-      <p class="small">It also drafts the lessons, from Kula Revise material, with a subject specialist checking each one.</p>
     </section>
 
     <section class="slide">
-      <h2>How we are building the mentor</h2>
+      <h2>How the lessons get made</h2>
       <div class="rules">
-        <p><b>Ask, then check.</b> It says what it noticed and asks whether that is right. If the teacher says no, it drops its reading and works from theirs instead.</p>
-        <p><b>Only what the teacher gave it.</b> What they kept, their two stars and a wish, where the lesson ran long. Never a verdict on the lesson as a whole.</p>
-        <p><b>One question past the first answer.</b> The first explanation is usually the easy one. It asks once more, then stops.</p>
-        <p><b>End with one thing to try.</b> Small enough to do in the next lesson, and counted the next time round.</p>
+        <p><b>Drafted with AI</b> from Kula Revise material, which is already written to examiner standard.</p>
+        <p><b>Checked by a subject specialist</b> before it reaches a teacher. Every lesson, every alternative.</p>
       </div>
+      <p class="small">This is AI in the workshop, not in the classroom. It is how three people build a library at speed. It is not what the teacher is using when they teach.</p>
     </section>
 
     <section class="slide">
       <h2>What is real</h2>
-      <p class="small">All of this is a mock-up, so the polish is not the point. What matters is which parts are real.</p>
       <div class="panel">
         <p><b>Real:</b> the lesson. Written to CAPS for Grade 12 History, Origins of the Cold War. A teacher could teach it tomorrow, including the alternatives inside every step.</p>
         <p><b>Not yet real:</b> the mentor. Every line it says is written by hand, to show the shape of the conversation before we build it.</p>
@@ -393,7 +434,28 @@
   <div class="remember" id="remember"></div>
   <div id="lesson-slot"></div>
 
-  <p class="note">The whole lesson is already on your phone. It works with no signal. Nothing you tap in class is sent anywhere.</p>
+</section>
+
+<!-- READY -->
+<section class="screen" id="s-ready">
+  <div class="topbar">
+    <button class="back" onclick="show('s-points')">&lsaquo; Back</button>
+    <span class="title">The Alliance: Yalta, 1945</span>
+    <span style="width:52px"></span>
+  </div>
+  <div class="pick-body">
+    <h1 class="pick-q">Ready to teach?</h1>
+    <div class="shape">
+      <p><b>Starter</b> <em>7 min</em> A group project everyone remembered differently.</p>
+      <p><b>Main</b> <em>30 min</em> Yalta, what the war cost, the two meanings of free elections, then a PEEL paragraph.</p>
+      <p><b>Plenary</b> <em>3 min</em> One written question, answered in a sentence.</p>
+    </div>
+    <p class="pt-p"><b>You need:</b> a board, and chalk or a marker. Learners need exercise books and pens. Nothing to print, nothing to project.</p>
+    <p class="pick-hint" style="text-align:left">In class you will see one step at a time. You can go back a step at any point.</p>
+  </div>
+  <div class="pick-foot">
+    <button class="btn primary" style="width:100%" onclick="openStartSheet()">Start the lesson</button>
+  </div>
 </section>
 
 <!-- KEY POINTS -->
@@ -419,14 +481,27 @@
     <p class="pt-p">Learners want someone to blame, so they decide Stalin was lying. Move them past this. The words of the agreement were unclear on purpose. Clear words would have stopped all three from signing it.</p>
 
     <h3 class="pt-h">What earns marks</h3>
-    <p class="pt-p">A fact with a because. "The alliance was breaking because they disagreed" earns almost nothing. "Because 27 million Soviet citizens had died and Stalin would not accept unfriendly neighbours" earns the mark.</p>
+    <p class="pt-p">Evidence that is explained. They write a PEEL paragraph at the end of the lesson, and the sentence most of them leave out is the one saying why the evidence proves the point. "They disagreed" is not evidence. "27 million Soviet citizens had died, so Stalin would not accept unfriendly neighbours" is.</p>
 
-    <h3 class="pt-h">You need</h3>
-    <p class="pt-p">A board, and chalk or a marker. Learners need exercise books and pens. Nothing to print, nothing to project.</p>
   </div>
   <div class="pick-foot">
-    <button class="btn primary" style="width:100%" onclick="openStartSheet()">Start the lesson</button>
+    <div class="row">
+      <button class="btn" onclick="openRefresh()">Revise the content</button>
+      <button class="btn primary" onclick="show('s-ready')">Next &rsaquo;</button>
+    </div>
+    <p class="pick-hint">Revising the content takes about four minutes. Skip it if you know this well.</p>
   </div>
+</section>
+
+<!-- REFRESH THE CONTENT -->
+<section class="screen" id="s-refresh">
+  <div class="topbar">
+    <button class="back" onclick="show('s-points')">&lsaquo; Back</button>
+    <span class="title">Revise the content</span>
+    <span style="width:52px"></span>
+  </div>
+  <div class="pick-body" id="refresh-body"></div>
+  <div class="pick-foot" id="refresh-foot"></div>
 </section>
 
 <!-- PREPARE -->
@@ -438,7 +513,7 @@
   </div>
   <div class="prep" id="prep-body">
     <h1>The Alliance: Yalta, 1945</h1>
-    <p class="lede">Read the whole lesson once. Say the lines out loud at least once, especially the opening. In class you will see one step at a time, with two buttons: <b>Remember this</b>, for a moment you want to discuss afterwards, and <b>Help</b>, for when a step is not working.</p>
+    <p class="lede">Read it once through. Say the lines out loud at least once, especially the opening.</p>
     <div id="prep-steps"></div>
   </div>
   <div class="sticky-foot">
@@ -450,11 +525,8 @@
 <section class="screen live" id="s-live">
   <div class="live-top">
     <div class="strip">
-      <button class="exit" onclick="exitLive()">End lesson</button>
-      <span class="stepnav-wrap">
-        <button class="stepnav" id="prev-step" onclick="prevStep()" aria-label="Previous step">&lsaquo;</button>
-        <span id="live-count">Step 1 of 8</span>
-      </span>
+      <button class="stepnav" id="prev-step" onclick="prevStep()"><span>&lsaquo;</span> Back</button>
+      <span id="live-count">Step 1 of 8</span>
       <span class="clock" id="lesson-timer">0:00 / 40:00</span>
       <button class="guide" onclick="openGuide()" aria-label="What the buttons do">?</button>
     </div>
@@ -495,6 +567,8 @@
     <input type="text" id="star-2" placeholder="e.g. They copied the board without being asked">
     <p class="why-label"><span class="wishmark">&#10022;</span> One thing you would change</p>
     <input type="text" id="wish" placeholder="e.g. Give them longer in pairs">
+
+    <p class="langnote">Write in whichever language you think in.</p>
   </div>
   <div class="pick-foot">
     <div class="row">
@@ -541,6 +615,7 @@ const LESSON = {
   steps:[
   {
     title:"Start with a story",
+    phase:"starter",
     mins:3,
     blocks:[
       {t:"you", x:"Books closed. Do not say what the story is for. Tell it, then wait."},
@@ -560,6 +635,7 @@ const LESSON = {
   },
   {
     title:"Ask what would prove it",
+    phase:"starter",
     mins:4,
     blocks:[
       {t:"say", full:["Turn to the person next to you. One minute. What would prove whose job that paragraph was?"],
@@ -578,6 +654,7 @@ const LESSON = {
   },
   {
     title:"Move to Yalta, 1945",
+    phase:"main",
     mins:6,
     blocks:[
       {t:"say", full:["Now we go to February 1945. The war in Europe is almost over. Three leaders sit down in a town called Yalta to decide what happens next."],
@@ -597,6 +674,7 @@ const LESSON = {
   },
   {
     title:"What the war had cost",
+    phase:"main",
     mins:5,
     blocks:[
       {t:"board", x:["27 million Soviet dead (fighting on Soviet land)","450 000 British dead","418 000 American dead (no fighting at home)"]},
@@ -614,12 +692,13 @@ const LESSON = {
   },
   {
     title:"The words they all signed",
+    phase:"main",
     mins:7,
     blocks:[
       {t:"you", x:"Read the promise twice, slowly. This is the main idea of the lesson."},
       {t:"say", full:["At Yalta all three signed a promise. Listen carefully. I will read it twice. The freed peoples of Europe would be helped to form governments through free elections.",
-        "In pairs. What does free mean to Stalin? What does free mean to Roosevelt? Two minutes."],
-        short:"Read the promise: governments through free elections. Then ask pairs what free means to Stalin, and to Roosevelt."},
+        "In pairs, two minutes. Both men signed that promise. Both went home satisfied. How is that possible?"],
+        short:"Read the promise twice, then ask in pairs: both signed it, both were satisfied, how?"},
       {t:"board", x:["\u201Cfree elections\u201D"]},
       {t:"do", x:"Pairs, two minutes. Then a few learners share."},
       {t:"say", full:["To Stalin, free meant free from governments that are against the Soviet Union. To Roosevelt, free meant that the people choose. Both men signed. Both went home satisfied. The same words. Two readings.",
@@ -630,47 +709,39 @@ const LESSON = {
       {t:"you", x:"Wait until most pens have stopped before you speak again."}
     ],
     pivots:{
-      lost:"Do the pair task with the whole class instead. Ask: if Stalin runs the election, who wins? Take one answer. Then ask: if the people choose, who might win? Write both meanings on the board.",
+      lost:"Make it concrete. Ask: what would Stalin need this election to produce? Then ask: what would Roosevelt need it to produce? Take one answer each, and write both meanings on the board.",
       noisy:"End the pair talk early. Say: pens down, look here. Write both meanings on the board yourself and explain them. Leave out the sharing.",
       time:"Leave out the pair talk. Read the promise once. Write both meanings on the board and explain them in two sentences. This is the main idea, so do not leave out the board.",
       early:"Ask: was this a mistake, or was it clever? Take two answers. Listen for anyone who says it was the only way to get all three to sign."
     }
   },
   {
-    title:"Every fact needs a because",
-    mins:8,
+    title:"Write a PEEL paragraph",
+    phase:"main",
+    mins:12,
     blocks:[
-      {t:"say", full:["This is the part the exam pays for. Write the question at the top of a clean line, then answer it in one sentence underneath.",
-        "Your answer must use something from the board. A number, a name, or a phrase. A fact with no because earns almost nothing. A because with no fact earns nothing."],
-        short:"They write the question, then answer it in one sentence using a fact from the board."},
-      {t:"board", x:["Q: Why was the alliance already breaking at Yalta?","Start: The alliance was already breaking at Yalta because ..."]},
-      {t:"do", x:"Copy the question, then write one sentence answering it with a fact and a because. About five minutes."},
-      {t:"you", x:"Walk around the room. Look for sentences with no fact in them."},
-      {t:"say", full:["Two of you read your sentence aloud. Everybody else, listen for the because."],
-        short:"Two learners read aloud. The class listens for the because."}
+      {t:"you", x:"Write the frame on the board before they start. Leave it up for the whole task."},
+      {t:"board", x:["P  The alliance was already breaking at Yalta because ...","E  For example, ...","E  This mattered because ...","L  So by February 1945, ..."]},
+      {t:"say", full:["You are going to write one paragraph, four sentences, using the frame on the board.",
+        "P is your point. It answers the question. E is your evidence, and it must come off this board: a number, a name, or a phrase. The second E explains why that evidence proves your point. L links back and closes it.",
+        "A fact with no explanation earns almost nothing. An explanation with no fact earns nothing."],
+        short:"Four sentences on the frame: point, evidence from the board, why it proves the point, link back."},
+      {t:"do", x:"Copy the frame and write the paragraph. About ten minutes."},
+      {t:"you", x:"Walk the room. Look for paragraphs where the second E is missing, which is the commonest gap."},
+      {t:"say", full:["Two of you read your paragraph. Everybody else, listen for the sentence that explains why the evidence matters."],
+        short:"Two learners read. The class listens for the explaining sentence."},
+      {t:"you", x:"Homework: the three dates, 1917, February 1945 and 8 May 1945, with one line each on why it matters."}
     ],
     pivots:{
-      lost:"Give a weak example first. Write on the board: The alliance was breaking because they disagreed. Ask: what is missing? Then ask them to improve it in their books.",
-      early:"Ask for a second sentence that starts with However, and gives one reason the alliance still held in February 1945. Hint: Japan was not yet defeated.",
-      time:"Cut to three minutes. Say: one sentence, one fact, one because. Take one reader, not two."
-    }
-  },
-  {
-    title:"Write the dates",
-    mins:4,
-    blocks:[
-      {t:"board", x:["1917: communists take power in Russia","Feb 1945: Yalta","8 May 1945: Germany surrenders"]},
-      {t:"do", x:"Copy the three dates, with one line for each."},
-      {t:"say", full:["Three dates. Copy them exactly. 1917: a communist government takes power in Russia, and Western mistrust starts here. February 1945: Yalta, the promise that each leader understood differently. 8 May 1945: Germany surrenders, and the shared enemy that held the alliance together is gone."],
-        short:"Say one line for each date: mistrust starts in 1917, Yalta is the promise read two ways, 8 May the shared enemy is gone."}
-    ],
-    pivots:{
-      time:"Write the dates only. Tell the class to copy the dates now, and to write the reasons at home from the textbook.",
-      early:"Cover the board with your hand. Ask the class to say the three dates back to you, in order."
+      lost:"Build the first two sentences with the whole class on the board, out loud, then let them write the last two on their own.",
+      early:"Ask for a fifth sentence starting with However, giving one reason the alliance still held in February 1945. Hint: Japan was not yet defeated.",
+      time:"They write P and E only, in class. The two explaining sentences go home with them.",
+      noisy:"Stop the talking. Silent writing for five minutes, and walk the room while they do it."
     }
   },
   {
     title:"Last sentence, then end",
+    phase:"plenary",
     mins:3,
     blocks:[
       {t:"say", full:["One last thing. Write the question down, answer it in one sentence, and then you may pack up. Why could three leaders sign the same words and mean different things?"],
@@ -687,6 +758,8 @@ const LESSON = {
     }
   }
 ]};
+
+const PHASES={starter:"Starter", main:"Main", plenary:"Plenary"};
 
 const PIVOT_LABELS = {
   lost:"They do not understand",
@@ -733,9 +806,10 @@ function renderHome(){
       <div class="meta">${NEXT_LESSON.meta}</div>
       <div class="need">${esc(NEXT_LESSON.line)}</div>
       <div class="row">
-        <button class="btn" disabled>Read the lesson</button>
-        <button class="btn primary" disabled>Start the lesson</button>
+        <button class="btn" disabled>Revise the content</button>
+        <button class="btn" disabled>Read the lesson plan</button>
       </div>
+      <div class="row" style="margin-top:10px"><button class="btn primary" style="width:100%" disabled>Next &rsaquo;</button></div>
       <p class="soonnote">Only the Yalta lesson is built in this prototype.</p>
     </div>
     <div class="row"><button class="btn" style="width:100%" onclick="teachAgain()">Teach the Yalta lesson again</button></div>`
@@ -743,10 +817,12 @@ function renderHome(){
     <div class="lesson-card">
       <h2>The Alliance: Yalta, 1945</h2>
       <div class="meta">Grade 12 History &middot; Origins of the Cold War &middot; Lesson 1 of 5 &middot; 40 minutes</div>
-      <div class="need"><b>You need:</b> a board, and chalk or a marker. Learners need exercise books and pens. Nothing to print. Nothing to project.</div>
       <div class="row">
-        <button class="btn" onclick="show('s-prep')">Read the lesson</button>
-        <button class="btn primary" onclick="openFocus()">Start the lesson</button>
+        <button class="btn" onclick="openRefresh()">Revise the content</button>
+        <button class="btn" onclick="show('s-prep')">Read the lesson plan</button>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn primary" style="width:100%" onclick="openFocus()">Next &rsaquo;</button>
       </div>
     </div>`;
 }
@@ -756,10 +832,9 @@ function renderRemember(){
   const l=lastLesson(); const el=document.getElementById('remember');
   if(!l){ el.style.display='none'; return; }
   el.style.display='block';
+  if(!l.tryNext){ el.style.display='none'; return; }
   el.innerHTML=`<h3>From your last lesson</h3>
-    <p>${esc(l.title)}</p>
-    <p>You were working on: <b>${esc(l.focus)}</b></p>
-    <p>You said you would try: <b>${esc(l.tryNext)}</b></p>`;
+    <p class="commit">You said you would try <b>${esc(l.tryNext)}</b></p>`;
 }
 
 /* ---------- START ---------- */
@@ -830,7 +905,8 @@ function renderCheckin(){
       ${WELL.map((w,i)=>`<button class="opt${checkin.well.includes(w)?' on':''}" onclick="pickWell(${i})">${esc(w)}</button>`).join("")}
       <input type="text" id="well-other" value="${esc(checkin.wellOther||'')}" placeholder="Or something else, in your own words" oninput="typeWell(this.value)">
       <p class="why-label">Why do you think that was? (optional)</p>
-      <input type="text" id="well-why" value="${esc(checkin.wellWhy)}" placeholder="In a few words">`;
+      <input type="text" id="well-why" value="${esc(checkin.wellWhy)}" placeholder="In a few words">
+      <p class="langnote">Write in whichever language you think in.</p>`;
     foot.innerHTML=`<div class="row">
         <button class="btn quiet" onclick="saveWhy('well');setStep(0)">Back</button>
         <button class="btn primary" onclick="saveWhy('well');setStep(2)">Next</button></div>`;
@@ -844,7 +920,8 @@ function renderCheckin(){
       ${IMPROVE.map((m,i)=>`<button class="opt${checkin.improve.includes(m.t)?' on':''}" onclick="pickImprove(${i})">${esc(m.t)}</button>`).join("")}
       <input type="text" id="improve-other" value="${esc(checkin.improveOther||'')}" placeholder="Or something else, in your own words" oninput="typeImprove(this.value)">
       <p class="why-label">What do you think was behind it? (optional)</p>
-      <input type="text" id="improve-why" value="${esc(checkin.improveWhy)}" placeholder="In a few words">`;
+      <input type="text" id="improve-why" value="${esc(checkin.improveWhy)}" placeholder="In a few words">
+      <p class="langnote">Write in whichever language you think in.</p>`;
     foot.innerHTML=`<div class="row">
         <button class="btn quiet" onclick="saveWhy('improve');setStep(1)">Back</button>
         <button class="btn primary" onclick="saveWhy('improve');setStep(3)">Next</button></div>`;
@@ -922,21 +999,36 @@ function renderBlock(b, short){
   return "";
 }
 
-/* ---------- PREPARE ---------- */
+/* ---------- PREPARE: one phase at a time ---------- */
+let prepPhase="starter";
+function setPrepPhase(p){ prepPhase=p; renderPrep(); document.getElementById('prep-body').scrollTop=0; }
 function renderPrep(){
   const el=document.getElementById('prep-steps');
-  el.innerHTML=`<div class="legend">
+  const keys=Object.keys(PHASES);
+  const mins=p=>LESSON.steps.filter(x=>x.phase===p).reduce((a,x)=>a+x.mins,0);
+  const steps=LESSON.steps.map((s,i)=>({s,n:i+1})).filter(o=>o.s.phase===prepPhase);
+
+  el.innerHTML=`
+    <div class="phase-tabs">
+      ${keys.map(k=>`<button class="${k===prepPhase?'on':''}" onclick="setPrepPhase('${k}')">
+        ${PHASES[k]} <em>${mins(k)}&#8201;min</em></button>`).join("")}
+    </div>
+    ${prepPhase==='starter'?`<div class="legend">
       <span class="lbl" style="background:var(--tint);color:var(--ink-soft)">Only for you</span><span>nobody else sees this</span>
       <span class="lbl" style="background:var(--lime);color:var(--ink)">Say</span><span>say it out loud</span>
       <span class="lbl" style="background:var(--board);color:var(--chalk)">On the board</span>
       <span class="lbl" style="background:var(--act);color:#fff">Learners</span><span>what the class does</span>
-    </div>` +
-  LESSON.steps.map((s,i)=>`
-    <div class="prep-step">
-      <div class="head"><h3>${i+1}. ${esc(s.title)}</h3><span class="t">${s.mins} min</span></div>
-      ${s.blocks.map(b=>renderBlock(b,false)).join("")}
-      <details><summary>If this does not work</summary><ul class="pivots">${Object.entries(s.pivots).map(([k,v])=>`<li><b>${PIVOT_LABELS[k]}.</b> ${esc(v)}</li>`).join("")}</ul></details>
-    </div>`).join("");
+    </div>`:''}
+    ${steps.map(({s,n})=>`
+      <div class="prep-step">
+        <div class="head"><h3>${n}. ${esc(s.title)}</h3><span class="t">${s.mins} min</span></div>
+        ${s.blocks.map(b=>renderBlock(b,false)).join("")}
+        <details><summary>If this does not work</summary><ul class="pivots">${Object.entries(s.pivots).map(([k,v])=>`<li><b>${PIVOT_LABELS[k]}.</b> ${esc(v)}</li>`).join("")}</ul></details>
+      </div>`).join("")}
+    ${(()=>{const i=keys.indexOf(prepPhase); return i<keys.length-1
+      ? `<button class="btn" style="width:100%;margin-top:18px" onclick="setPrepPhase('${keys[i+1]}')">Next: ${PHASES[keys[i+1]]} &rsaquo;</button>`
+      : '';})()}
+  `;
 }
 
 /* ---------- LIVE ---------- */
@@ -950,30 +1042,28 @@ async function startLive(){
   try{ if('wakeLock' in navigator) wakeLock=await navigator.wakeLock.request('screen'); }catch(e){}
 }
 function renderStep(){
-  const s=LESSON.steps[idx];
+  const st=LESSON.steps[idx];
   stepStart=Date.now();
   if(!lessonStart) lessonStart=Date.now();
-  document.getElementById('step-title').textContent=s.title;
-  document.getElementById('live-count').textContent=`Step ${idx+1} of ${LESSON.steps.length}`;
+  document.getElementById('step-title').textContent=st.title;
+  document.getElementById('live-count').textContent=`${PHASES[st.phase]} \u00b7 ${idx+1} of ${LESSON.steps.length}`;
   document.getElementById('prev-step').disabled = idx===0;
   document.getElementById('live-bar').style.width=((idx)/LESSON.steps.length*100)+"%";
-  document.getElementById('step-plan').textContent=`of ${s.mins} min`;
+  document.getElementById('step-plan').textContent=`of ${st.mins} min`;
   document.getElementById('next-btn').textContent = idx===LESSON.steps.length-1 ? "Finish" : "Next step";
-  const body=document.getElementById('live-body');
-  body.innerHTML=`
+  document.getElementById('live-body').innerHTML=`
     <div class="toggle">
       <button class="${mode==='say'?'on':''}" onclick="setMode('say')">Full words</button>
       <button class="${mode==='brief'?'on':''}" onclick="setMode('brief')">Short</button>
     </div>
-    <div id="content"></div>
-  `;
+    <div id="content"></div>`;
   renderContent();
-  body.scrollTop=0;
+  document.getElementById('live-body').scrollTop=0;
   updateTimers();
 }
 function renderContent(){
-  const s=LESSON.steps[idx];
-  document.getElementById('content').innerHTML = s.blocks.map(b=>renderBlock(b, mode==='brief')).join("");
+  const st=LESSON.steps[idx];
+  document.getElementById('content').innerHTML = st.blocks.map(b=>renderBlock(b, mode==='brief')).join("");
 }
 function setMode(m){ mode=m; document.querySelectorAll('.toggle button').forEach((b,i)=>b.classList.toggle('on',(i===0)===(m==='say'))); renderContent(); }
 function updateTimers(){
@@ -1020,6 +1110,94 @@ function toast(msg){
   clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('on'),1300);
 }
 
+/* ---------- REVISE THE CONTENT: the content arm ---------- */
+const TERMS={
+ "bolsheviks":["Bolsheviks","The revolutionary faction led by Lenin that seized power in Russia in October 1917 and became the ruling Communist Party of the Soviet Union."],
+ "russian civil war":["Russian Civil War","The war of 1918 to 1922 between the new Bolshevik government and its opponents. Britain, the United States and others sent troops to support the anti-Bolshevik side."],
+ "pact with hitler":["Nazi-Soviet Pact","The agreement of August 1939 in which Germany and the Soviet Union promised not to attack each other. A secret protocol divided Poland between them."],
+ "red army":["Red Army","The armed forces of the Soviet Union."],
+ "oder":["the Oder","The river on Germany's eastern edge. Soviet forces reached it in early 1945, roughly seventy kilometres from Berlin."],
+ "occupation zones":["Occupation zones","The areas of defeated Germany placed under the control of the Soviet Union, the United States and Britain, with a French zone added later."],
+ "security council veto":["Security Council veto","The power of each permanent member of the UN Security Council to block a resolution on its own."],
+ "curzon line":["Curzon Line","A boundary first proposed in 1919. It became the basis for Poland's eastern border after 1945, shifting Poland westward at Germany's expense."],
+ "declaration on liberated europe":["Declaration on Liberated Europe","The Yalta commitment that freed peoples would form governments through free elections."],
+ "sphere of influence":["Sphere of influence","A region a great power expects to control or shape without formally ruling it."],
+ "historiography":["Historiography","The study of how historians have interpreted a topic, and why their interpretations differ."],
+ "orthodox":["Orthodox","The early Western reading: the Cold War began because the Soviet Union expanded, and the West conceded too much at Yalta."],
+ "revisionist":["Revisionist","The reading that American economic and atomic power drove the breach, and that Soviet behaviour was defensive."],
+ "post-revisionist":["Post-revisionist","The reading that neither side planned it. Each treated the other's security measures as aggression."],
+ "potsdam":["Potsdam","The conference of July and August 1945, after Germany surrendered. Truman had replaced Roosevelt, and Attlee replaced Churchill during it."],
+ "top band":["Top band","The highest mark range in a rubric. In NSC History it is reached through sustained argument, not more facts."]
+};
+function termify(t){
+  return esc(t).replace(/\{\{([^}]+)\}\}/g, (m,inner)=>{
+    const [key,label]=inner.split("|");
+    const k=key.toLowerCase().trim();
+    return TERMS[k] ? `<button class="term" onclick="showTerm('${k}')">${label||key}</button>` : (label||key);
+  });
+}
+function termKeys(card){
+  const found=[];
+  card.p.forEach(p=>{ const m=p.match(/\{\{([^}]+)\}\}/g)||[];
+    m.forEach(x=>{ const k=x.slice(2,-2).split("|")[0].toLowerCase().trim(); if(TERMS[k]&&!found.includes(k)) found.push(k); }); });
+  return found.slice(0,4);
+}
+function showTerm(k){
+  const t=TERMS[k]; if(!t) return;
+  document.getElementById('sheet-body').innerHTML=`
+    <h3>${esc(t[0])}</h3>
+    <p class="term-def">${esc(t[1])}</p>
+    <div class="row" style="margin-top:14px">
+      <button class="btn primary" style="width:100%" onclick="closeSheet()">Close</button>
+    </div>`;
+  document.getElementById('scrim').classList.add('on');
+  document.getElementById('sheet').classList.add('on');
+}
+
+const REFRESH=[
+ {h:"It was never a friendship",
+  p:["The alliance was a marriage of necessity, and everyone in the room knew it. Britain and the United States had sent troops against the {{bolsheviks|Bolsheviks}} during the {{russian civil war|Russian Civil War}}. Stalin had signed a {{pact with hitler|pact with Hitler}} in August 1939 and taken eastern Poland under it.",
+     "They were on the same side from June 1941 because Hitler invaded the Soviet Union, not because anything had been resolved. Keep this in mind: the question is not why the alliance broke, but why it held as long as it did."]},
+ {h:"Yalta, 4 to 11 February 1945",
+  p:["Churchill, Roosevelt and Stalin met at a former palace in the Crimea. Roosevelt was visibly ill and would be dead within ten weeks.",
+     "The military position shaped everything. The {{red army|Red Army}} had just driven to {{oder|the Oder}} and stood roughly seventy kilometres from Berlin, while the Western allies were still east of the Rhine. Whatever was written down, the Soviet Union already physically held most of the territory under discussion."]},
+ {h:"What was actually agreed",
+  p:["Germany would be divided into {{occupation zones|occupation zones}}, with a French zone carved out of the British and American ones. The United Nations would be founded, with the {{security council veto|Security Council veto}} settled.",
+     "The Soviet Union would enter the war against Japan two to three months after Germany surrendered. Poland's eastern border would follow the {{curzon line|Curzon Line}}, with compensation in the west at Germany's expense.",
+     "And the {{declaration on liberated europe|Declaration on Liberated Europe}} promised that freed peoples would form governments through free elections."]},
+ {h:"The phrase that meant two things",
+  p:["Free elections was the phrase nobody explained. For Roosevelt it meant the people choose their government. For Stalin it meant a government that is not against the Soviet Union. After two invasions in thirty years, he would not give that up. What he wanted was a {{sphere of influence|sphere of influence}} on his western border.",
+     "Poland was where it would be tested, and both men knew that. Britain had gone to war in 1939 over Poland. The Red Army was already standing on it."]},
+ {h:"The debate examiners reward",
+  p:["Historians do not agree about who started the Cold War. There are three main answers, and this argument is called {{historiography|historiography}}.",
+     "{{orthodox|Orthodox}}: the Soviet Union caused it. Stalin wanted to expand, and at Yalta the West gave him too much.",
+     "{{revisionist|Revisionist}}: the United States caused it. Its money and its bomb pushed Stalin, and what he did was to protect himself.",
+     "{{post-revisionist|Post-revisionist}}: neither side planned it. Each one saw the other protecting itself and thought it was being attacked. Most examiners credit this answer, because it explains how both sides could sign in good faith and still become enemies.",
+     "Learners who can name these three answers, and not just give one cause, write in the {{top band|top band}}."]},
+ {h:"Easy to get wrong",
+  p:["Truman was not at Yalta. Roosevelt was. Truman took over in April and appears at {{potsdam|Potsdam}}.",
+     "The atomic bomb was not a factor at Yalta. It was first tested in July 1945, five months later.",
+     "Churchill was voted out during the Potsdam conference and replaced mid-conference by Attlee.",
+     "Yalta did not divide Europe into East and West. It divided Germany into zones. The wider division came from what happened next."]}
+];
+let refreshAt=0;
+function openRefresh(){ refreshAt=0; renderRefresh(); show('s-refresh'); }
+function renderRefresh(){
+  const c=REFRESH[refreshAt], last=refreshAt===REFRESH.length-1;
+  const keys=termKeys(c);
+  document.getElementById('refresh-body').innerHTML=`
+    <p class="pick-step">${refreshAt+1} of ${REFRESH.length}</p>
+    <h1 class="pick-q">${esc(c.h)}</h1>
+    ${c.p.map(p=>`<p class="pt-p">${termify(p)}</p>`).join("")}
+    ${keys.length?`<div class="termbar"><span class="termbar-l">Key terms</span>
+      ${keys.map(k=>`<button class="chip sm" onclick="showTerm('${k}')">${esc(TERMS[k][0])}</button>`).join("")}</div>`:''}`;
+  document.getElementById('refresh-foot').innerHTML=`<div class="row">
+    <button class="btn quiet" onclick="${refreshAt===0?"show('s-home')":'stepRefresh(-1)'}">${refreshAt===0?'Close':'Back'}</button>
+    <button class="btn primary" onclick="${last?"show('s-home')":'stepRefresh(1)'}">${last?'Done':'Next'}</button></div>`;
+  document.getElementById('refresh-body').scrollTop=0;
+}
+function stepRefresh(d){ refreshAt=Math.max(0,Math.min(REFRESH.length-1,refreshAt+d)); renderRefresh(); }
+
 /* ---------- BEFORE YOU GO IN: popup on starting ---------- */
 function openStartSheet(){
   document.getElementById('sheet-body').innerHTML=`
@@ -1050,7 +1228,8 @@ function openGuide(){
       <p>Moves you on. The countdown is a guide, not a rule. Running over is normal, and the mentor will show you where it happened.</p></div>
     <div class="row" style="margin-top:14px">
       <button class="btn primary" style="width:100%" onclick="closeSheet()">Back to the lesson</button>
-    </div>`;
+    </div>
+    <button class="cancel" onclick="closeSheet();exitLive()">End the lesson now</button>`;
   document.getElementById('scrim').classList.add('on');
   document.getElementById('sheet').classList.add('on');
 }
